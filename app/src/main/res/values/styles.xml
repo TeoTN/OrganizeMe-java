@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+
+        <item name="android:actionBarStyle">@style/MainActionBar</item>
+
+        <!-- compatibility properties -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="actionBarStyle">@style/MainActionBar</item>
+    </style>
+
+    <style name="MainActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:titleTextStyle">@style/ActionBarText</item>
+
+        <!-- compatibility properties -->
+        <item name="background">@color/primary</item>
+        <item name="titleTextStyle">@style/ActionBarText</item>
+    </style>
+
+    <style name="ActionBarText"
+        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/primary_light</item>
+    </style>
+
+    <style name="btn" parent="@android:style/Widget.Button">
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:shadowColor">#AA000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">0.2</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+</resources>
