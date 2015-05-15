@@ -1,40 +1,43 @@
 package pl.piotrstaniow.organizeme;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 
-public class TasksActivity extends ActionBarActivity {
-    private ArrayAdapter<String> adapter;
-    private EditText newItemET;
-    private ArrayList<String> taskList;
+public class TasksActivity extends ActionBarActivity
+    implements NewTaskFragment.OnNewTaskCreatedListener {
+    private TaskListAdapter taskListAdapter;
+    private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        newItemET = (EditText) findViewById(R.id.newItem);
-        ListView taskListView = (ListView) findViewById(R.id.todoList);
-        taskList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1);
+        ListView drawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
 
-        taskListView.setAdapter(adapter);
+        ListView taskListView = (ListView) findViewById(R.id.todoList);
+        taskListAdapter = new TaskListAdapter(this);
+
+
+        taskListView.setAdapter(taskListAdapter);
         taskListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) parent.getItemAtPosition(position);
-                adapter.remove(item);
+                Task item = (Task) parent.getItemAtPosition(position);
+                taskListAdapter.remove(item);
                 return true;
             }
         });
@@ -50,27 +53,38 @@ public class TasksActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_new_task) {
+            createNewTaskFragment();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void newTask(View view){
-        taskList.add(String.valueOf(newItemET.getText()));
-        String newTask = newItemET.getText().toString();
-        if (newTask.equals("")) {
-            Toast.makeText(this, "Empty task", Toast.LENGTH_SHORT).show();
-            return;
+    private void createNewTaskFragment() {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
         }
-        adapter.add(newTask);
-        newItemET.setText("");
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = new NewTaskFragment();
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+
+    @Override
+    public void onNewTaskCreated(Task newTask) {
+        taskListAdapter.add(newTask);
+        taskListAdapter.notifyDataSetChanged();
     }
 }
