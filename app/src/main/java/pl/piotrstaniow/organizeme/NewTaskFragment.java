@@ -24,7 +24,7 @@ import java.util.Calendar;
 public class NewTaskFragment extends DialogFragment
     implements DatePickerDialog.OnDateSetListener, View.OnClickListener, View.OnFocusChangeListener {
     private OnNewTaskCreatedListener mListener;
-    Button createBtn;
+    Button createBtn, dismissBtn;
     EditText taskDescET, taskDateET;
 
     @Override
@@ -37,12 +37,15 @@ public class NewTaskFragment extends DialogFragment
         thisView.setMinimumHeight(500);
 
         createBtn = (Button) thisView.findViewById(R.id.create_new_task);
+        dismissBtn = (Button) thisView.findViewById(R.id.dismiss_new_task);
+
         taskDateET = (EditText) thisView.findViewById(R.id.task_date);
         taskDescET = (EditText) thisView.findViewById(R.id.task_desc);
 
         taskDateET.setOnClickListener(this);
         taskDateET.setOnFocusChangeListener(this);
         createBtn.setOnClickListener(this);
+        dismissBtn.setOnClickListener(this);
 
         // Inflate the layout for this fragment
         return thisView;
@@ -70,6 +73,9 @@ public class NewTaskFragment extends DialogFragment
         }
         if (view == taskDateET) {
             pickDate();
+        }
+        if (view == dismissBtn) {
+            dismiss();
         }
     }
 
