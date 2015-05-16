@@ -13,4 +13,5 @@
     <string name="task_new_title">New task</string>
     <string name="btn_create_task">CREATE</string>
     <string name="btn_dismiss_task">CANCEL</string>
+    <string name="title_activity_new_task">New Task</string>
 </resources>
