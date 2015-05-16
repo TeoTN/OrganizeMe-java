@@ -12,14 +12,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 
 public class TasksActivity extends ActionBarActivity
-    implements NewTaskFragment.OnNewTaskCreatedListener {
+    implements NewTaskFragment.OnNewTaskCreatedListener, View.OnClickListener {
     private TaskListAdapter taskListAdapter;
     private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
-
+    private FloatingActionButton newTaskBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +31,9 @@ public class TasksActivity extends ActionBarActivity
 
         ListView taskListView = (ListView) findViewById(R.id.todoList);
         taskListAdapter = new TaskListAdapter(this);
+
+        newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
+        newTaskBtn.setOnClickListener(this);
 
 
         taskListView.setAdapter(taskListAdapter);
@@ -58,9 +62,6 @@ public class TasksActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_new_task) {
-            createNewTaskFragment();
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -86,5 +87,12 @@ public class TasksActivity extends ActionBarActivity
     public void onNewTaskCreated(Task newTask) {
         taskListAdapter.add(newTask);
         taskListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == newTaskBtn) {
+            createNewTaskFragment();
+        }
     }
 }
