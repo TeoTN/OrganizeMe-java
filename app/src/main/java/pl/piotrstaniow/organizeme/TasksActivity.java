@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import pl.piotrstaniow.organizeme.TaskByDate.TaskListAdapter;
 
 
 public class TasksActivity extends ActionBarActivity
@@ -22,12 +23,13 @@ public class TasksActivity extends ActionBarActivity
     private TaskListAdapter taskListAdapter;
     private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
     private FloatingActionButton newTaskBtn;
+    private FloatingActionsMenu floatingMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        ListView drawerList = (ListView) findViewById(R.id.left_drawer);
+        ListView drawerList = (ListView) findViewById(R.id.drawer_list);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
 
         ListView taskListView = (ListView) findViewById(R.id.todoList);
@@ -36,6 +38,7 @@ public class TasksActivity extends ActionBarActivity
         newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
 
+        floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
 
         taskListView.setAdapter(taskListAdapter);
         taskListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -86,12 +89,8 @@ public class TasksActivity extends ActionBarActivity
         ft.add(android.R.id.content, newFragment)
                 .addToBackStack(null).commit();
 
-/*
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        DialogFragment newFragment = new NewTaskFragment();
-        newFragment.show(getSupportFragmentManager(), "dialog");*/
+        floatingMenu.setVisibility(View.INVISIBLE);
+        floatingMenu.collapse();
     }
 
 
@@ -99,6 +98,7 @@ public class TasksActivity extends ActionBarActivity
     public void onNewTaskCreated(Task newTask) {
         taskListAdapter.add(newTask);
         taskListAdapter.notifyDataSetChanged();
+        floatingMenu.setVisibility(View.VISIBLE);
     }
 
     @Override
