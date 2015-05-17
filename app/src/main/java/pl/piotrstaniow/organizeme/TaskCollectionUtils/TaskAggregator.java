@@ -1,7 +1,6 @@
 package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import com.android.internal.util.Predicate;
-
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 import pl.piotrstaniow.organizeme.Task;
 
@@ -16,9 +15,8 @@ import java.util.List;
  */
 public class TaskAggregator {
     private static TaskAggregator instance = null;
-    private List<Task> taskList;
     LocalQueryManager localQueryManager;
-
+    private List<Task> taskList;
 
     private TaskAggregator() {
         taskList = new ArrayList<>();

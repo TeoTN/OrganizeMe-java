@@ -1,21 +1,17 @@
 package pl.piotrstaniow.organizeme;
 
 import android.app.DatePickerDialog;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.*;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 
 public class NewTaskActivity extends ActionBarActivity
@@ -23,6 +19,7 @@ public class NewTaskActivity extends ActionBarActivity
 
     Button createBtn, dismissBtn;
     EditText taskDescET, taskDateET;
+    Spinner categorySpinner;
     Task createdTask;
 
     @Override
@@ -37,32 +34,30 @@ public class NewTaskActivity extends ActionBarActivity
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
 
+        categorySpinner = (Spinner) findViewById(R.id.category);
+
         taskDateET.setOnClickListener(this);
         taskDateET.setOnFocusChangeListener(this);
+
         createBtn.setOnClickListener(this);
         dismissBtn.setOnClickListener(this);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.default_categories, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_task, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.menu_new_task, menu);
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
