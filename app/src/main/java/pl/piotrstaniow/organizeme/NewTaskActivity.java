@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import java.util.Calendar;
 
+import pl.piotrstaniow.organizeme.TaskByDate.TaskAggregator;
+
 
 public class NewTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
 
@@ -87,6 +89,7 @@ public class NewTaskActivity extends ActionBarActivity implements View.OnClickLi
         String taskDate = String.valueOf(taskDateET.getText());
         Task task = new Task(taskDesc);
         task.setTaskDate(taskDate);
+        TaskAggregator.getInstance().addTask(task);
         finish();
     }
     @Override

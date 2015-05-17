@@ -10,7 +10,7 @@ import java.util.Date;
  * Email: staniowp@gmail.com
  * Created: 12.05.15
  */
-public class Task {
+public class    Task {
     private String taskDesc;
     private String taskDate;
     private Date date;
