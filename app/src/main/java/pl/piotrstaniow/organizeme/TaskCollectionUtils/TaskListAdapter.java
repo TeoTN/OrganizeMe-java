@@ -91,7 +91,7 @@ public class TaskListAdapter extends BaseAdapter {
         }
 
         text1.setText(task.getTaskDesc());
-        text2.setText(task.getTaskDate());
+        text2.setText(task.getDisplayDate());
 
         return returnView;
     }
