@@ -26,36 +26,37 @@
             android:layout_marginRight="0dp"
             android:layout_marginBottom="0dp"
             android:id="@+id/floating_menu"
-            fab:fab_addButtonColorNormal="@color/primary"
-            fab:fab_addButtonColorPressed="@color/primary_light"
-            fab:fab_addButtonPlusIconColor="@color/half_black"
+            fab:fab_addButtonColorNormal="@color/accent"
+            fab:fab_addButtonColorPressed="@color/accent_light"
+            fab:fab_addButtonPlusIconColor="@android:color/white"
             fab:fab_addButtonSize="normal"
             fab:fab_labelStyle="@style/menu_labels_style"
             fab:fab_labelsPosition="left">
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/primary"
+                fab:fab_colorNormal="@color/accent"
                 fab:fab_title="Add project"
                 fab:fab_size="mini"
-                fab:fab_colorPressed="@color/primary_light"
+                fab:fab_colorPressed="@color/accent_light"
                 />
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/primary"
+                fab:fab_colorNormal="@color/accent"
                 fab:fab_title="Notification"
                 fab:fab_size="mini"
-                fab:fab_colorPressed="@color/primary_light"
+                fab:fab_colorPressed="@color/accent_light"
                 />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/primary"
+                fab:fab_colorNormal="@color/accent"
                 fab:fab_size="mini"
                 fab:fab_title="New task"
-                fab:fab_colorPressed="@color/primary_light"
+                fab:fab_icon="@drawable/ic_action_new"
+                fab:fab_colorPressed="@color/accent_light"
                 android:id="@+id/new_task_btn"
             />
 

@@ -1,8 +1,7 @@
-package pl.piotrstaniow.organizeme.TaskByDate;
+package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import android.content.Context;
-import android.util.ArrayMap;
-import android.util.Log;
+import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,36 +11,24 @@ import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * OrganizeMe
- * <p/>
- * Author: Piotr Staniów
- * Email: staniowp@gmail.com
+ * Author: Piotr Staniów, Zuzanna Gniewaszewska, Sławomir Domagała
+ * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created: 12.05.15
  */
 public class TaskListAdapter extends BaseAdapter {
     private Context ctx;
     private TaskAggregator aggregator;
-    private DatePredicates predicates;
-    private List<List<Task>> tasksByPredicate;
+    private TaskCategoryManager categoryMgr;
 
-    public TaskListAdapter(Context ctx) {
+    public TaskListAdapter(Context ctx, TaskCategoryManager categoryMgr) {
         this.ctx = ctx;
+        this.categoryMgr = categoryMgr;
         aggregator = TaskAggregator.getInstance();
-        loadTasks();
-    }
-
-    private void loadTasks() {
-        tasksByPredicate = new ArrayList<>();
-        predicates = new DatePredicates();
-        for (Predicate<Task> predicate : predicates.getPredicateList()) {
-            tasksByPredicate.add(aggregator.filter(predicate));
-        }
     }
 
     @Override
@@ -50,26 +37,28 @@ public class TaskListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Task getItem(int i) {
+    public Task getItem(int id) {
         int ds = 0;
         int p = 0;
-        Task q = aggregator.getItem(0);
-        for (List<Task> group : tasksByPredicate) {
-            if (i >= ds + group.size()) {
-                ds += group.size();
-                ++p;
+        Iterator groupIterator = categoryMgr.getTasksCategorizedIterator();
+        while (groupIterator.hasNext()) {
+            ArrayMap.Entry group = (ArrayMap.Entry) groupIterator.next();
+            List<Task> tasks = (List<Task>) group.getValue();
+            Predicate<Task> predicate = (Predicate<Task>) group.getKey();
+
+            if (id >= ds + tasks.size()) {
+                ds += tasks.size();
             }
             else {
-                Task t = group.get(i - ds);
-                if (t == group.get(0)) {
-                    String groupName = predicates.getPredicateList().get(p).toString();
-                    t.setPredicate(groupName);
-                    t.setIsFirstInGroup(true);
+                Task task = tasks.get(id - ds);
+                if (task == tasks.get(0)) {
+                    task.setIsFirstInGroup(true);
+                    task.setPredicate(predicate.toString());
                 }
-
-                return t;
+                return task;
             }
         }
+
         return null;
     }
 
@@ -109,13 +98,11 @@ public class TaskListAdapter extends BaseAdapter {
 
     public void remove(Task item) {
         aggregator.removeTask(item);
-        loadTasks();
         notifyDataSetChanged();
     }
 
     public void add(Task newTask) {
         aggregator.addTask(newTask);
-        loadTasks();
         notifyDataSetChanged();
     }
 }

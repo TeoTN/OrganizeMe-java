@@ -21,8 +21,8 @@ public class    Task {
     private boolean isFirstInGroup;
     private String predicate;
 
-    public Task(String taskDesc) {
-        this.taskDesc = taskDesc;
+    public Task() {
+        date = new Date();
         myID = lastID++;
         isFirstInGroup = false;
     }
@@ -74,5 +74,9 @@ public class    Task {
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

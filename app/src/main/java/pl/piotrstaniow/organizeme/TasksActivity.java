@@ -10,7 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import pl.piotrstaniow.organizeme.TaskByDate.TaskListAdapter;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
 public class TasksActivity extends ActionBarActivity
@@ -18,16 +20,21 @@ public class TasksActivity extends ActionBarActivity
     private TaskListAdapter taskListAdapter;
     private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
     private FloatingActionButton newTaskBtn;
+    private FloatingActionsMenu floatingMenu;
+    private ListView taskListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
+        floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
+
         ListView drawerList = (ListView) findViewById(R.id.drawer_list);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
 
-        ListView taskListView = (ListView) findViewById(R.id.todoList);
-        taskListAdapter = new TaskListAdapter(this);
+        taskListView = (ListView) findViewById(R.id.todoList);
+        taskListAdapter = new TaskListAdapter(this, new DateCategoryManager());
 
         newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
@@ -44,6 +51,12 @@ public class TasksActivity extends ActionBarActivity
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        taskListAdapter.notifyDataSetChanged();
+        taskListView.deferNotifyDataSetChanged();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,6 +85,7 @@ public class TasksActivity extends ActionBarActivity
     public void onClick(View view) {
         if (view == newTaskBtn) {
             createNewTaskActivity();
+            floatingMenu.collapse();
         }
     }
 }

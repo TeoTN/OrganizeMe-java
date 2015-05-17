@@ -1,0 +1,26 @@
+package pl.piotrstaniow.organizeme.DatePredicates;
+
+import com.android.internal.util.Predicate;
+import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by piotr on 17.05.15.
+ */
+public class TaskFurtherPredicate implements Predicate<Task> {
+    @Override
+    public boolean apply(Task task) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 8);
+        Date then = TaskUtils.cutTime(calendar.getTime());
+        Date tdate = TaskUtils.cutTime(task.getDate());
+        return (tdate.compareTo(then)>=0);
+    }
+
+    public String toString() {
+        return "Further tasks";
+    }
+}
