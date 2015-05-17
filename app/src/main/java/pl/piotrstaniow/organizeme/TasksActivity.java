@@ -6,12 +6,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
@@ -19,8 +17,8 @@ import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 public class TasksActivity extends ActionBarActivity
     implements View.OnClickListener {
-    private TaskListAdapter taskListAdapter;
     private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
+    private TaskListAdapter taskListAdapter;
     private FloatingActionButton newTaskBtn;
     private FloatingActionsMenu floatingMenu;
     private ListView taskListView;
@@ -30,6 +28,11 @@ public class TasksActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
         LocalDbHelper.createInstance(this);
+
+        try {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (NullPointerException e) {
+        }
 
         floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
 
@@ -42,16 +45,7 @@ public class TasksActivity extends ActionBarActivity
         newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
 
-
         taskListView.setAdapter(taskListAdapter);
-        taskListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Task item = (Task) parent.getItemAtPosition(position);
-                taskListAdapter.remove(item);
-                return true;
-            }
-        });
     }
 
     @Override

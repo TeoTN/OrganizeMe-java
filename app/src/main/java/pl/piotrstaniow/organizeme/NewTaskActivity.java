@@ -6,7 +6,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
@@ -17,7 +21,7 @@ import java.util.Date;
 public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
 
-    Button createBtn, dismissBtn;
+    FloatingActionButton createBtn;
     EditText taskDescET, taskDateET;
     Spinner categorySpinner;
     Task createdTask;
@@ -28,8 +32,7 @@ public class NewTaskActivity extends ActionBarActivity
         setContentView(R.layout.activity_new_task);
         createdTask = new Task();
 
-        createBtn = (Button) findViewById(R.id.create_new_task);
-        dismissBtn = (Button) findViewById(R.id.dismiss_new_task);
+        createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
 
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
@@ -40,7 +43,6 @@ public class NewTaskActivity extends ActionBarActivity
         taskDateET.setOnFocusChangeListener(this);
 
         createBtn.setOnClickListener(this);
-        dismissBtn.setOnClickListener(this);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.default_categories, android.R.layout.simple_spinner_item);
@@ -69,10 +71,6 @@ public class NewTaskActivity extends ActionBarActivity
         }
         if (view == taskDateET) {
             pickDate();
-        }
-        if (view == dismissBtn) {
-            finish();
-           // dismiss();
         }
     }
     private void pickDate() {

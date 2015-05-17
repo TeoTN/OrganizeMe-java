@@ -18,30 +18,30 @@
 			android:paddingTop="16dp"
 			android:paddingLeft="0dp"
 			android:paddingRight="0dp">
-		<Button
+		<ImageView
 				android:id="@+id/category"
 				android:layout_width="5dp"
 				android:layout_height="40dp"
 				android:background="#FF0066AA"
 				android:layout_alignParentLeft="true"
-				android:paddingTop="16dp"
+			android:paddingTop="16dp"
 				android:gravity="center_vertical|center_horizontal"
 				/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:id="@+id/text1"
-        android:paddingLeft="16dp"
-        android:layout_toRightOf="@id/category"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Base.TextAppearance.AppCompat.Caption"
-        android:id="@+id/text2"
-        android:paddingLeft="16dp"
-        android:layout_toRightOf="@id/category"
-        android:layout_below="@id/text1"
-        />
+		<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				style="@style/Base.TextAppearance.AppCompat.Body1"
+				android:id="@+id/text1"
+				android:paddingLeft="16dp"
+				android:layout_toRightOf="@id/category"/>
+		<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				style="@style/Base.TextAppearance.AppCompat.Caption"
+				android:id="@+id/text2"
+				android:paddingLeft="16dp"
+				android:layout_toRightOf="@id/category"
+				android:layout_below="@id/text1"
+				/>
 	</RelativeLayout>
 </LinearLayout>
