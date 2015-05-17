@@ -13,6 +13,7 @@ import android.widget.EditText;
 import java.util.Calendar;
 import java.util.Date;
 
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
@@ -28,7 +29,6 @@ public class NewTaskActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
-
         createdTask = new Task();
 
         createBtn = (Button) findViewById(R.id.create_new_task);

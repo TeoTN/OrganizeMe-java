@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
@@ -27,6 +29,7 @@ public class TasksActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        LocalDbHelper.createInstance(this);
 
         floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
 
