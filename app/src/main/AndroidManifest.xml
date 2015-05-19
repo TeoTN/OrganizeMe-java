@@ -19,11 +19,14 @@
         <activity
             android:name=".NewTaskActivity"
             android:label="@string/title_activity_new_task"
-            android:parentActivityName=".TasksActivity">
-	        <meta-data
-			        android:name="android.support.PARENT_ACTIVITY"
-			        android:value=".TasksActivity"/>
-
+            android:parentActivityName=".TasksActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TasksActivity" />
+        </activity>
+        <activity
+            android:name=".CategoriesActivity"
+            android:label="@string/title_activity_categories" >
         </activity>
     </application>
 

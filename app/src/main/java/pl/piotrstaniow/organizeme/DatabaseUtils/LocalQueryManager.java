@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.piotrstaniow.organizeme.Category;
 import pl.piotrstaniow.organizeme.Task;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
@@ -63,6 +64,19 @@ public class LocalQueryManager {
         long id = task.getID();
         database.delete("task","id="+id,null);
     }
+
+	public long createCategory(Category category) {
+		ContentValues values = new ContentValues();
+		values.put("name", category.getName());
+		values.put("color", category.getColor());
+		long newRowId = database.insert("category", null, values);
+		return newRowId;
+	}
+
+	public void removeCategory(Category category){
+		long id = category.getID();
+		database.delete("category","id="+id,null);
+	}
 
     public List<Task> getAllTasks(){
         List<Task> taskList = new ArrayList<>();
