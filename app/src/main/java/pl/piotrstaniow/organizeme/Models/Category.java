@@ -10,9 +10,7 @@ public class Category {
 	private String color;
 	private String name;
 
-	public Category(String name, String color) {
-		this.name = name;
-		this.color = color;
+	public Category() {
 	}
 
 	public String getName() {

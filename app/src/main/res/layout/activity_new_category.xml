@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:fab="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+	<android.support.v7.widget.Toolbar
+			android:layout_width="fill_parent"
+			android:layout_height="100dp"
+			android:background="@color/primary"
+			android:padding="10dp"
+			>
+		<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="Category name"
+				android:maxLength="40"
+				android:layout_marginLeft="36dp"
+				android:id="@+id/category_name"
+				style="@style/Base.TextAppearance.AppCompat.Title"
+				android:textColor="@android:color/white"/>
+	</android.support.v7.widget.Toolbar>
+	<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:padding="16dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Category color"
+            android:maxLength="40"
+            android:layout_marginLeft="36dp"
+            android:id="@+id/category_color"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:textColor="@android:color/white"/>
+	</RelativeLayout>
+	<com.getbase.floatingactionbutton.FloatingActionButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			fab:fab_colorNormal="@color/accent"
+			fab:fab_size="normal"
+			fab:fab_icon="@drawable/ic_done"
+			android:id="@+id/create_new_task"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:layout_marginRight="16dp"
+			android:layout_marginBottom="0dp"/>
+</LinearLayout>

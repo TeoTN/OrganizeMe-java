@@ -28,6 +28,14 @@
             android:name=".CategoriesActivity"
             android:label="@string/title_activity_categories" >
         </activity>
+        <activity
+            android:name=".NewCategoryActivity"
+            android:label="New category"
+            android:parentActivityName=".CategoriesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CategoriesActivity" />
+        </activity>
     </application>
 
 </manifest>

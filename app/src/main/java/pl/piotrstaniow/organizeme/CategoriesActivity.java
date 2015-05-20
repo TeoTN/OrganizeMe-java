@@ -20,7 +20,7 @@ public class CategoriesActivity extends ActionBarActivity
 		implements View.OnClickListener, AdapterView.OnItemClickListener {
 	private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels", "Categories"};
 	private CategoryListAdapter categoryListAdapater;
-	private FloatingActionButton newTaskBtn;
+	private FloatingActionButton newCategoryBtn;
 	private FloatingActionsMenu floatingMenu;
 	private ListView categoryListView;
 	private ListView drawerList;
@@ -45,8 +45,8 @@ public class CategoriesActivity extends ActionBarActivity
 		categoryListView = (ListView) findViewById(R.id.categoryList);
 		categoryListAdapater = new CategoryListAdapter(this, CategoryAggregator.getInstance());
 
-		newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
-		newTaskBtn.setOnClickListener(this);
+		newCategoryBtn = (FloatingActionButton) findViewById(R.id.new_category_btn);
+		newCategoryBtn.setOnClickListener(this);
 
 		categoryListView.setAdapter(categoryListAdapater);
 	}
@@ -76,15 +76,15 @@ public class CategoriesActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void createNewTaskActivity(){
-		Intent intent = new Intent(this, NewTaskActivity.class);
+	private void createNewCategoryActivity(){
+		Intent intent = new Intent(this, NewCategoryActivity.class);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onClick(View view) {
-		if (view == newTaskBtn) {
-			createNewTaskActivity();
+		if (view == newCategoryBtn) {
+			createNewCategoryActivity();
 			floatingMenu.collapse();
 		}
 	}

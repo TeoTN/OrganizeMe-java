@@ -104,7 +104,9 @@ public class LocalQueryManager {
         while (!cursor.isAfterLast()) {
             String name = cursor.getString(0);
             String color = cursor.getString(1);
-            Category category = new Category(name, color);
+            Category category = new Category();
+            category.setName(name);
+            category.setColor(color);
             categoryList.add(category);
             cursor.moveToNext();
         }
