@@ -1,42 +1,105 @@
 package pl.piotrstaniow.organizeme;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
+import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryListAdapter;
 
 
-public class CategoriesActivity extends ActionBarActivity {
+public class CategoriesActivity extends ActionBarActivity
+		implements View.OnClickListener, AdapterView.OnItemClickListener {
+	private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels", "Categories"};
+	private CategoryListAdapter categoryListAdapater;
+	private FloatingActionButton newTaskBtn;
+	private FloatingActionsMenu floatingMenu;
+	private ListView categoryListView;
+	private ListView drawerList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categories);
-		LocalDbHelper db = LocalDbHelper.createInstance(this);
+		LocalDbHelper.createInstance(this);
+
+		try {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		} catch (NullPointerException e) {
+		}
+
+		floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
+
+		drawerList = (ListView) findViewById(R.id.drawer_list);
+		drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
+		drawerList.setOnItemClickListener(this);
+
+		categoryListView = (ListView) findViewById(R.id.categoryList);
+		categoryListAdapater = new CategoryListAdapter(this, CategoryAggregator.getInstance());
+
+		newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
+		newTaskBtn.setOnClickListener(this);
+
+		categoryListView.setAdapter(categoryListAdapater);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		categoryListAdapater.notifyDataSetChanged();
+		categoryListView.deferNotifyDataSetChanged();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_categories, menu);
+		getMenuInflater().inflate(R.menu.menu_tasks, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_settings) {
 			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void createNewTaskActivity(){
+		Intent intent = new Intent(this, NewTaskActivity.class);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onClick(View view) {
+		if (view == newTaskBtn) {
+			createNewTaskActivity();
+			floatingMenu.collapse();
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if(parent == drawerList) {
+			if(drawerOptions[position].equals("Categories")) {
+				createCategoriesActivity();
+			}
+		}
+	}
+
+	private void createCategoriesActivity() {
+		Intent intent = new Intent(this, CategoriesActivity.class);
+		startActivity(intent);
 	}
 }

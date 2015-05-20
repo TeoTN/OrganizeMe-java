@@ -1,17 +1,15 @@
 package pl.piotrstaniow.organizeme.DatabaseUtils;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.piotrstaniow.organizeme.Category;
-import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.Models.Category;
+import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 /**
@@ -65,17 +63,15 @@ public class LocalQueryManager {
         database.delete("task","id="+id,null);
     }
 
-	public long createCategory(Category category) {
+	public void createCategory(Category category) {
 		ContentValues values = new ContentValues();
 		values.put("name", category.getName());
 		values.put("color", category.getColor());
-		long newRowId = database.insert("category", null, values);
-		return newRowId;
+		database.insert("category", null, values);
 	}
 
 	public void removeCategory(Category category){
-		long id = category.getID();
-		database.delete("category","id="+id,null);
+		database.delete("category", "name=" + category.getName(), null);
 	}
 
     public List<Task> getAllTasks(){
@@ -98,5 +94,21 @@ public class LocalQueryManager {
         }
         cursor.close();
         return taskList;
+    }
+
+    public List<Category> getAllCategories() {
+        List<Category> categoryList = new ArrayList<>();
+        String[] columns = {"name", "color"};
+        Cursor cursor = database.query("category",columns,null,null,null,null,null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            String name = cursor.getString(0);
+            String color = cursor.getString(1);
+            Category category = new Category(name, color);
+            categoryList.add(category);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return categoryList;
     }
 }

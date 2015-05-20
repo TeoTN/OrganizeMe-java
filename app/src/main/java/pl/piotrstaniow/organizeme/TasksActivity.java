@@ -6,22 +6,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
+import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
 public class TasksActivity extends ActionBarActivity
-    implements View.OnClickListener {
-    private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels"};
+    implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels", "Categories"};
     private TaskListAdapter taskListAdapter;
     private FloatingActionButton newTaskBtn;
     private FloatingActionsMenu floatingMenu;
     private ListView taskListView;
+    private ListView drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +39,12 @@ public class TasksActivity extends ActionBarActivity
 
         floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
 
-        ListView drawerList = (ListView) findViewById(R.id.drawer_list);
+        drawerList = (ListView) findViewById(R.id.drawer_list);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
+        drawerList.setOnItemClickListener(this);
 
         taskListView = (ListView) findViewById(R.id.todoList);
-        taskListAdapter = new TaskListAdapter(this, new DateCategoryManager());
+        taskListAdapter = new TaskListAdapter(this, new DateCategoryManager(), TaskAggregator.getInstance());
 
         newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
@@ -84,5 +88,19 @@ public class TasksActivity extends ActionBarActivity
             createNewTaskActivity();
             floatingMenu.collapse();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(parent == drawerList) {
+            if(drawerOptions[position].equals("Categories")) {
+                createCategoriesActivity();
+            }
+        }
+    }
+
+    private void createCategoriesActivity() {
+        Intent intent = new Intent(this, CategoriesActivity.class);
+        startActivity(intent);
     }
 }

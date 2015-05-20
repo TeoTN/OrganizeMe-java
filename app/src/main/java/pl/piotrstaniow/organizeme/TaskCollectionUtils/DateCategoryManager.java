@@ -3,7 +3,8 @@ package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 import android.support.v4.util.ArrayMap;
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.DatePredicates.*;
-import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.Models.Task;
+import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 
 import java.util.ArrayList;
 import java.util.Iterator;

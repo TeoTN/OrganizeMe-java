@@ -1,16 +1,93 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context="pl.piotrstaniow.organizeme.CategoriesActivity">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- The main content view -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context=".Main">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <ListView
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/categoryList"/>
 
-</RelativeLayout>
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="0dp"
+            android:id="@+id/floating_menu"
+            fab:fab_addButtonColorNormal="@color/accent"
+            fab:fab_addButtonColorPressed="@color/accent_light"
+            fab:fab_addButtonPlusIconColor="@android:color/white"
+            fab:fab_addButtonSize="normal"
+            fab:fab_labelStyle="@style/menu_labels_style"
+            fab:fab_labelsPosition="left">
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_title="Add project"
+                fab:fab_size="mini"
+                fab:fab_colorPressed="@color/accent_light"
+                />
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_title="Notification"
+                fab:fab_size="mini"
+                fab:fab_colorPressed="@color/accent_light"
+                />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_size="mini"
+                fab:fab_title="New task"
+                fab:fab_icon="@drawable/ic_action_new"
+                fab:fab_colorPressed="@color/accent_light"
+                android:id="@+id/new_task_btn"
+                />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+    <RelativeLayout
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical" >
+        <android.support.v7.widget.Toolbar
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:background="@color/primary"
+            android:id="@+id/drawer_toolbar">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Good list is a key to success!"
+                />
+        </android.support.v7.widget.Toolbar>
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/drawer_toolbar"
+            android:background="@color/white"
+            android:choiceMode="singleChoice"/>
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.android.internal.util.Predicate;
+
+import pl.piotrstaniow.organizeme.ItemAggregator;
+import pl.piotrstaniow.organizeme.ItemListAdapter;
+import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.R;
-import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.Models.Task;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,15 +24,15 @@ import java.util.List;
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created: 12.05.15
  */
-public class TaskListAdapter extends BaseAdapter {
+public class TaskListAdapter extends BaseAdapter implements ItemListAdapter<Task> {
     private Context ctx;
-    private TaskAggregator aggregator;
+    private ItemAggregator<Task> aggregator;
     private TaskCategoryManager categoryMgr;
 
-    public TaskListAdapter(Context ctx, TaskCategoryManager categoryMgr) {
+    public TaskListAdapter(Context ctx, TaskCategoryManager categoryMgr, TaskAggregator taskAggregator) {
         this.ctx = ctx;
         this.categoryMgr = categoryMgr;
-        aggregator = TaskAggregator.getInstance();
+        aggregator = taskAggregator;
     }
 
     @Override
@@ -96,13 +100,15 @@ public class TaskListAdapter extends BaseAdapter {
         return returnView;
     }
 
+    @Override
     public void remove(Task item) {
-        aggregator.removeTask(item);
+        aggregator.remove(item);
         notifyDataSetChanged();
     }
 
+    @Override
     public void add(Task newTask) {
-        aggregator.addTask(newTask);
+        aggregator.add(newTask);
         notifyDataSetChanged();
     }
 }

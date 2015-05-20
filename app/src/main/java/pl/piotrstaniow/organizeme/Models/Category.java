@@ -1,17 +1,18 @@
-package pl.piotrstaniow.organizeme;
+package pl.piotrstaniow.organizeme.Models;
 
 /**
- * Created by slawomir on 20.05.15.
+ * OrganizeMe
+ * Author: Piotr Staniów, Zuzanna Gniewaszewska, S³awomir Domaga³a
+ * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
+ * Created on 17.05.15.
  */
 public class Category {
 	private String color;
-	private long ID;
 	private String name;
 
-	public Category(String name, String color, long ID) {
+	public Category(String name, String color) {
 		this.name = name;
 		this.color = color;
-		this.ID = ID;
 	}
 
 	public String getName() {
@@ -20,14 +21,6 @@ public class Category {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public long getID() {
-		return ID;
-	}
-
-	public void setID(long ID) {
-		this.ID = ID;
 	}
 
 	public String getColor() {
