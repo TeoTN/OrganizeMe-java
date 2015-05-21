@@ -3,7 +3,7 @@ package pl.piotrstaniow.organizeme;
 import android.widget.ListAdapter;
 
 /**
- * Created by S³awomir on 2015-05-20.
+ * Created by SÅ‚awomir on 2015-05-20.
  */
 public interface ItemListAdapter<ItemType> extends ListAdapter {
     int getCount();

@@ -2,16 +2,15 @@ package pl.piotrstaniow.organizeme.Models;
 
 
 import com.android.internal.util.Predicate;
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
+import pl.piotrstaniow.organizeme.ItemAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.ItemAggregator;
-
 /**
  * OrganizeMe
- * Author: Piotr StaniÛw, Zuzanna Gniewaszewska, S≥awomir Domaga≥a
+ * Author: Piotr Stani√≥w, Zuzanna Gniewaszewska, S≈Çawomir Domaga≈Ça
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created on 17.05.15.
  */

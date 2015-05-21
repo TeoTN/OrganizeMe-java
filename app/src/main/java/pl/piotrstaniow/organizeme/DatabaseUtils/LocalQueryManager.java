@@ -4,13 +4,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -84,8 +83,9 @@ public class LocalQueryManager {
             String taskDesc = cursor.getString(1);
             String taskDate = cursor.getString(2);
             Task task = new Task();
-            if(taskDate != null)
+            if (taskDate != null) {
                 task.setDate(TaskUtils.stringToDate(taskDate));
+            }
             task.setTaskDesc(taskDesc);
             task.setID(id);
             taskList.add(task);

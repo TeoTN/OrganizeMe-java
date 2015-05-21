@@ -17,11 +17,12 @@ public class TaskNextWeekPredicate implements Predicate<Task> {
     @Override
     public boolean apply(Task task) {
         Calendar calendar = Calendar.getInstance();
-        Date now = TaskUtils.cutTime(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date tomorrow = TaskUtils.cutTime(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_MONTH, 8);
         Date then = TaskUtils.cutTime(calendar.getTime());
         Date tdate = TaskUtils.cutTime(task.getDate());
-        return (tdate.after(now) && tdate.before(then) );
+        return (tdate.after(tomorrow) && tdate.before(then));
     }
 
     public String toString() {

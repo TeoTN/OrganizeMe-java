@@ -5,7 +5,7 @@ import com.android.internal.util.Predicate;
 import java.util.List;
 
 /**
- * Created by S³awomir on 2015-05-20.
+ * Created by SÅ‚awomir on 2015-05-20.
  */
 public interface ItemAggregator<ItemType> {
     void add(ItemType newTask);
