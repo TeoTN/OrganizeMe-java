@@ -35,7 +35,7 @@ public class CategoryListAdapter extends BaseAdapter implements ItemListAdapter<
 
     @Override
     public Category getItem(int id) {
-        return null;
+        return aggregator.getItem(id);
     }
 
     @Override
