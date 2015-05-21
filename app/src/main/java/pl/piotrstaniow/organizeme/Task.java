@@ -2,6 +2,7 @@ package pl.piotrstaniow.organizeme;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * OrganizeMe
@@ -10,13 +11,12 @@ import java.util.Date;
  * Email: staniowp@gmail.com
  * Created: 12.05.15
  */
-public class    Task {
+public class Task {
+    private static long lastID = 0;
     private String taskDesc;
     private String taskDate;
     private Date date;
     private long myID;
-    private static long lastID = 0;
-
     //Don't serialize following:
     private boolean isFirstInGroup;
     private String predicate;
@@ -39,16 +39,6 @@ public class    Task {
         return taskDesc;
     }
 
-    public void setTaskDate(String taskDate) {
-        this.taskDate = taskDate;
-        String[] datesplit = taskDate.split("\\.");
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, Integer.parseInt(datesplit[2]));
-        cal.set(Calendar.MONTH, Integer.parseInt(datesplit[1])-1);
-        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(datesplit[0]));
-        date = cal.getTime();
-    }
-
     public long getID() {
         return myID;
     }
@@ -56,6 +46,18 @@ public class    Task {
     public Date getDate() {
         return date;
     }
+
+    public void setDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int y = calendar.get(Calendar.YEAR);
+        int d = calendar.get(Calendar.DAY_OF_MONTH);
+        String m = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+
+        taskDate = String.valueOf(d) + ' ' + m + ' ' + y;
+        this.date = date;
+    }
+
     public String getTaskDate() {
         return taskDate;
     }
@@ -74,9 +76,5 @@ public class    Task {
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 }
