@@ -8,15 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
 
-public class TasksActivity extends ActionBarActivity
-        implements AdapterView.OnItemClickListener {
+public class TasksActivity extends ActionBarActivity {
     private String[] drawerOptions;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -68,16 +65,6 @@ public class TasksActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(parent == drawerList) {
-            if(drawerOptions[position].equals("Categories")) {
-                createCategoriesActivity();
-            }
-        }
     }
 
     private void createCategoriesActivity() {

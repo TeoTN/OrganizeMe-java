@@ -19,4 +19,7 @@
 
 	<!-- TODO: Remove or change this placeholder text -->
 	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="task_edit">Edit</string>
+	<string name="task_delete">Delete</string>
+	<string name="task_notif">Notifications</string>
 </resources>
