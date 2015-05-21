@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

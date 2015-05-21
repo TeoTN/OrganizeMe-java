@@ -1,9 +1,10 @@
 package pl.piotrstaniow.organizeme;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,16 +71,27 @@ public class TasksActivity extends ActionBarActivity
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        Fragment prev = fragmentManager.findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
         }
+
+        DialogFragment newFragment = new NewTaskFragment();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        ft.add(android.R.id.content, newFragment)
+                .addToBackStack(null).commit();
+
+/*
         ft.addToBackStack(null);
 
         // Create and show the dialog.
         DialogFragment newFragment = new NewTaskFragment();
-        newFragment.show(getSupportFragmentManager(), "dialog");
+        newFragment.show(getSupportFragmentManager(), "dialog");*/
     }
 
 
