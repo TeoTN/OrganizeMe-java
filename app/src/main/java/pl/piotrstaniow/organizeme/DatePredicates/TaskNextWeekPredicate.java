@@ -1,7 +1,7 @@
 package pl.piotrstaniow.organizeme.DatePredicates;
 
 import com.android.internal.util.Predicate;
-import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 import java.util.Calendar;

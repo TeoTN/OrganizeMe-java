@@ -1,8 +1,9 @@
-package pl.piotrstaniow.organizeme.TaskCollectionUtils;
+package pl.piotrstaniow.organizeme.Models;
 
 import com.android.internal.util.Predicate;
+
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.Task;
+import pl.piotrstaniow.organizeme.ItemAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created on 16.05.15.
  */
-public class TaskAggregator {
+public class TaskAggregator implements ItemAggregator<Task> {
     private static TaskAggregator instance = null;
     LocalQueryManager localQueryManager;
     private List<Task> taskList;
@@ -37,7 +38,8 @@ public class TaskAggregator {
         return instance;
     }
 
-    public void addTask(Task newTask) {
+    @Override
+    public void add(Task newTask) {
         localQueryManager.openWritable();
         long id = localQueryManager.createTask(newTask);
         localQueryManager.close();
@@ -46,19 +48,23 @@ public class TaskAggregator {
         taskList.add(newTask);
     }
 
-    public void removeTask(Task task) {
-        //localQueryManager.removeTask(task);
+    @Override
+    public void remove(Task task) {
+        //localQueryManager.remove(task);
         taskList.remove(task);
     }
 
+    @Override
     public int getSize() {
         return taskList.size();
     }
 
+    @Override
     public Task getItem(int i) {
         return taskList.get(i);
     }
 
+    @Override
     public List<Task> filter(Predicate<Task> predicate) {
         List<Task> filtered = new ArrayList<>();
         for (Task task : taskList) {

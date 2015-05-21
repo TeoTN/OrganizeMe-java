@@ -11,7 +11,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
+
+import pl.piotrstaniow.organizeme.Models.Task;
+import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 import java.util.Calendar;
@@ -85,7 +87,7 @@ public class NewTaskActivity extends ActionBarActivity
     private void createNewTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
         createdTask.setTaskDesc(taskDesc);
-        TaskAggregator.getInstance().addTask(createdTask);
+        TaskAggregator.getInstance().add(createdTask);
         finish();
     }
     @Override

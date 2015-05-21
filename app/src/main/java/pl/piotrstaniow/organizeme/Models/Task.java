@@ -1,4 +1,4 @@
-package pl.piotrstaniow.organizeme;
+package pl.piotrstaniow.organizeme.Models;
 
 import java.util.Calendar;
 import java.util.Date;
