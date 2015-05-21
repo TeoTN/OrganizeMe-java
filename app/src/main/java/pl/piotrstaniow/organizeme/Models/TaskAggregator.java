@@ -50,8 +50,10 @@ public class TaskAggregator implements ItemAggregator<Task> {
 
     @Override
     public void remove(Task task) {
-        //localQueryManager.remove(task);
+        localQueryManager.openWritable();
+        localQueryManager.removeTask(task);
         taskList.remove(task);
+        localQueryManager.close();
     }
 
     @Override

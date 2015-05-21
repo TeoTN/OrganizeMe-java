@@ -46,8 +46,14 @@ public class LocalQueryManager {
     public void openWritable() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
-
-    public void close() {
+    @Override
+    public void finalize() throws Throwable {
+        database.close();
+        dbHelper.close();
+        super.finalize();
+    }
+    public void close(){
+        database.close();
         dbHelper.close();
     }
 
@@ -135,6 +141,7 @@ public class LocalQueryManager {
             cursor.moveToNext();
         }
         cursor.close();
+
         return taskList;
     }
 
