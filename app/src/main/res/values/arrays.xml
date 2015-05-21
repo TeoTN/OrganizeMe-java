@@ -5,4 +5,8 @@
 		<item>School assignments</item>
 		<item>Households</item>
 	</string-array>
+	<string-array name="drawer_options">
+		<item>All tasks</item>
+		<item>Categories</item>
+	</string-array>
 </resources>

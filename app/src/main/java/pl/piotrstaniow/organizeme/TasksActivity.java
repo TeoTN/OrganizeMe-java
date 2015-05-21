@@ -2,63 +2,54 @@ package pl.piotrstaniow.organizeme;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
-import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
 public class TasksActivity extends ActionBarActivity
-    implements View.OnClickListener, AdapterView.OnItemClickListener {
-    private final String[] drawerOptions ={"All tasks", "Today", "Next week", "Projects", "Labels", "Categories"};
-    private TaskListAdapter taskListAdapter;
-    private FloatingActionButton newTaskBtn;
-    private FloatingActionsMenu floatingMenu;
-    private ListView taskListView;
+        implements AdapterView.OnItemClickListener {
+    private String[] drawerOptions;
+    private DrawerLayout drawerLayout;
     private ListView drawerList;
+    private FrameLayout contentFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-        LocalDbHelper.createInstance(this);
 
         try {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (NullPointerException e) {
         }
 
-        floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
+        preloadContent();
+
+        drawerOptions = getResources().getStringArray(R.array.drawer_options);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         drawerList = (ListView) findViewById(R.id.drawer_list);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
-        drawerList.setOnItemClickListener(this);
-
-        taskListView = (ListView) findViewById(R.id.todoList);
-        taskListAdapter = new TaskListAdapter(this, new DateCategoryManager(), TaskAggregator.getInstance());
-
-        newTaskBtn = (FloatingActionButton) findViewById(R.id.new_task_btn);
-        newTaskBtn.setOnClickListener(this);
-
-        floatingMenu = (FloatingActionsMenu) findViewById(R.id.floating_menu);
-
-        taskListView.setAdapter(taskListAdapter);
+        drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        taskListAdapter.notifyDataSetChanged();
-        taskListView.deferNotifyDataSetChanged();
+    private void preloadContent() {
+        contentFrame = (FrameLayout) findViewById(R.id.content_frame);
+        Fragment fragment = new TaskListFragment();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
     }
 
     @Override
@@ -79,18 +70,6 @@ public class TasksActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void createNewTaskActivity(){
-        Intent intent = new Intent(this, NewTaskActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == newTaskBtn) {
-            createNewTaskActivity();
-            floatingMenu.collapse();
-        }
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +81,19 @@ public class TasksActivity extends ActionBarActivity
     }
 
     private void createCategoriesActivity() {
-        Intent intent = new Intent(this, CategoriesActivity.class);
+        Intent intent = new Intent(this, CategoriesFragment.class);
         startActivity(intent);
+    }
+
+    public String[] getDrawerOptions() {
+        return drawerOptions;
+    }
+
+    public void setDrawerItemChecked(int position, boolean b) {
+        drawerList.setItemChecked(position, b);
+    }
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawers();
     }
 }

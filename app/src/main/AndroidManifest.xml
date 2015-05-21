@@ -25,16 +25,12 @@
                 android:value=".TasksActivity" />
         </activity>
         <activity
-            android:name=".CategoriesActivity"
-            android:label="@string/title_activity_categories" >
-        </activity>
-        <activity
             android:name=".NewCategoryActivity"
             android:label="New category"
-            android:parentActivityName=".CategoriesActivity" >
+            android:parentActivityName=".TasksActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CategoriesActivity" />
+                android:value=".TasksActivity"/>
         </activity>
     </application>
 
