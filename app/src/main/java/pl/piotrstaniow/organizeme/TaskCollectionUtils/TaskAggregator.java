@@ -1,6 +1,8 @@
 package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import com.android.internal.util.Predicate;
+
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 import pl.piotrstaniow.organizeme.Task;
 
 import java.util.ArrayList;
@@ -15,9 +17,15 @@ import java.util.List;
 public class TaskAggregator {
     private static TaskAggregator instance = null;
     private List<Task> taskList;
+    LocalQueryManager localQueryManager;
+
 
     private TaskAggregator() {
         taskList = new ArrayList<>();
+        localQueryManager = LocalQueryManager.getInstance();
+        localQueryManager.openWritable();
+        taskList = localQueryManager.getAllTasks();
+        localQueryManager.close();
     }
 
     public static TaskAggregator getInstance() {
@@ -32,7 +40,10 @@ public class TaskAggregator {
     }
 
     public void addTask(Task newTask) {
+        localQueryManager.openWritable();
         taskList.add(newTask);
+        localQueryManager.createTask(newTask.getTaskDesc(), newTask.getTaskDate());
+        localQueryManager.close();
     }
 
     public void removeTask(Task task) {
