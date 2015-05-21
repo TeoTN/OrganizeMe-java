@@ -9,4 +9,17 @@
 		<item>All tasks</item>
 		<item>Categories</item>
 	</string-array>
+	<string-array name="notif_types">
+		<item>Just in time</item>
+		<item>5 min</item>
+		<item>10 min</item>
+
+		<item>15 min</item>
+		<item>30 min</item>
+		<item>1 hr</item>
+
+		<item>3 hrs</item>
+		<item>1 day</item>
+		<item>3 days</item>
+	</string-array>
 </resources>

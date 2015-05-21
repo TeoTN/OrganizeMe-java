@@ -3,7 +3,9 @@ package pl.piotrstaniow.organizeme;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,10 +94,23 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                             taskListAdapter.notifyDataSetChanged();
 
                         } else if (which == R.id.task_notif) {
-                            Toast.makeText(getActivity(), "Notifications...", Toast.LENGTH_SHORT).show();
+                            pickNotif();
                         }
                     }
                 }).show();
         return true;
+    }
+
+    private void pickNotif() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("picknotif");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = new NotificationFragment();
+        newFragment.show(ft, "picknotif");
     }
 }
