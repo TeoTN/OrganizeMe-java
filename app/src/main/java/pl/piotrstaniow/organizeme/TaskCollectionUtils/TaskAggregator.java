@@ -1,4 +1,4 @@
-package pl.piotrstaniow.organizeme.TaskByDate;
+package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.Task;
@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by piotr on 16.05.15.
+ * OrganizeMe
+ * Author: Piotr Staniów, Zuzanna Gniewaszewska, Sławomir Domagała
+ * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
+ * Created on 16.05.15.
  */
 public class TaskAggregator {
     private static TaskAggregator instance = null;

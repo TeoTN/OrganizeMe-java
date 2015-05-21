@@ -1,7 +1,6 @@
 package pl.piotrstaniow.organizeme;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,19 +11,25 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.util.Calendar;
+import java.util.Date;
 
-import pl.piotrstaniow.organizeme.TaskByDate.TaskAggregator;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskAggregator;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
 
-public class NewTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
+public class NewTaskActivity extends ActionBarActivity
+        implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
 
     Button createBtn, dismissBtn;
     EditText taskDescET, taskDateET;
+    Task createdTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
+
+        createdTask = new Task();
 
         createBtn = (Button) findViewById(R.id.create_new_task);
         dismissBtn = (Button) findViewById(R.id.dismiss_new_task);
@@ -87,20 +92,25 @@ public class NewTaskActivity extends ActionBarActivity implements View.OnClickLi
     private void createNewTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
         String taskDate = String.valueOf(taskDateET.getText());
-        Task task = new Task(taskDesc);
-        task.setTaskDate(taskDate);
-        TaskAggregator.getInstance().addTask(task);
+        createdTask.setTaskDesc(taskDesc);
+        TaskAggregator.getInstance().addTask(createdTask);
         finish();
     }
     @Override
     public void onFocusChange(View view, boolean b) {
-        if (view == taskDateET && b == true) {
+        if (view == taskDateET && b) {
             pickDate();
         }
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        taskDateET.setText(day+"."+month+"."+year);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        Date date = TaskUtils.cutTime(calendar.getTime());
+        createdTask.setDate(date);
+        taskDateET.setText(day+"."+(month+1)+"."+year);
     }
 }
