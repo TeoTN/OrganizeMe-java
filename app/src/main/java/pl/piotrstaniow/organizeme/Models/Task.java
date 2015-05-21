@@ -16,6 +16,7 @@ public class Task {
     private String displayDate;
     private Date date;
     private long myID;
+    private Category category;
     //Don't serialize following:
     private boolean isFirstInGroup;
     private boolean isDateSet = false;
@@ -103,5 +104,12 @@ public class Task {
 
     public boolean isTimeSet(){
         return isTimeSet;
+    }
+
+    public void setCategory(Category category){
+        this.category = category;
+    }
+    public Category getCategory(){
+        return category;
     }
 }

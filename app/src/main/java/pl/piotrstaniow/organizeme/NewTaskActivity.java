@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,6 +16,9 @@ import android.widget.TimePicker;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import pl.piotrstaniow.organizeme.CategoryPredicates.CategoryAllPredicate;
+import pl.piotrstaniow.organizeme.Models.Category;
+import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
@@ -22,11 +26,12 @@ import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener{
 
     FloatingActionButton createBtn;
     EditText taskDescET, taskDateET, taskTimeET;
@@ -35,6 +40,7 @@ public class NewTaskActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        CategoryAggregator ca = CategoryAggregator.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
         createdTask = new Task();
@@ -54,9 +60,10 @@ public class NewTaskActivity extends ActionBarActivity
         taskTimeET.setOnFocusChangeListener(this);
 
         createBtn.setOnClickListener(this);
+        List<Category> allCategories = ca.filter(new CategoryAllPredicate());
+        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this,
+                android.R.layout.simple_spinner_item,allCategories);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.default_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
     }
@@ -86,6 +93,7 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskTimeET){
             pickTime();
         }
+
     }
 
     private void pickTime() {
@@ -151,5 +159,16 @@ public class NewTaskActivity extends ActionBarActivity
         else
             str += "" + min;
         taskTimeET.setText(str);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Category category = (Category) adapterView.getAdapter().getItem(i);
+        createdTask.setCategory(category);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

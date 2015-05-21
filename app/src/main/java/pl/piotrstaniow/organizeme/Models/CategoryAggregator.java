@@ -65,6 +65,13 @@ public class CategoryAggregator implements ItemAggregator<Category> {
 
     @Override
     public List<Category> filter(Predicate<Category> predicate) {
-        return null;
+        List<Category> filtered = new ArrayList<>();
+        for (Category category : categoryList) {
+            if (predicate.apply(category)) {
+                filtered.add(category);
+            }
+        }
+        return filtered;
     }
+
 }
