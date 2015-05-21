@@ -11,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
-import pl.piotrstaniow.organizeme.TaskByDate.TaskListAdapter;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
