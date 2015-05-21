@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:fab="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="fill_parent"
               android:orientation="vertical">
 	<android.support.v7.widget.Toolbar
 			android:layout_width="fill_parent"
@@ -41,14 +41,35 @@
 				android:paddingLeft="8dp"
 				android:layout_toRightOf="@id/icon_date"/>
 		<EditText
-				android:layout_width="match_parent"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/task_date_hint"
 				android:editable="false"
 				android:layout_toRightOf="@id/icon_date"
 				android:layout_marginLeft="4dp"
 				android:layout_below="@id/label_date"
-				android:id="@+id/task_date"/>
+				android:id="@+id/task_date"
+            android:layout_toLeftOf="@+id/task_time"
+            android:layout_toStartOf="@+id/task_time" />
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/task_time_hint"
+            android:editable="false"
+            android:id="@+id/task_time"
+            android:layout_alignTop="@+id/task_date"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TIME"
+            android:id="@+id/label_time"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:paddingLeft="4dp"
+            android:layout_above="@+id/task_date"
+            android:layout_toRightOf="@+id/task_date"
+            android:layout_toEndOf="@+id/task_date" />
 	</RelativeLayout>
 	<RelativeLayout
 			android:layout_width="fill_parent"
@@ -90,5 +111,6 @@
 			android:layout_alignParentRight="true"
 			android:layout_alignParentBottom="true"
 			android:layout_marginRight="16dp"
-			android:layout_marginBottom="0dp"/>
+			android:layout_marginBottom="0dp"
+        android:layout_gravity="right" />
 </LinearLayout>

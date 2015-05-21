@@ -10,6 +10,7 @@
     <string name="action_notifications">Notifications</string>
     <string name="task_desc_hint">Task description</string>
     <string name="task_date_hint">Date</string>
+    <string name="task_time_hint">Time</string>
     <string name="task_new_title">New task</string>
     <string name="btn_create_task">CREATE</string>
     <string name="btn_dismiss_task">CANCEL</string>

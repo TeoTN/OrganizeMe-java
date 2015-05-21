@@ -2,7 +2,7 @@ package pl.piotrstaniow.organizeme.Models;
 
 /**
  * OrganizeMe
- * Author: Piotr Staniów, Zuzanna Gniewaszewska, Sławomir Domagała
+ * Author: Piotr Staniow, Zuzanna Gniewaszewska, Slawomir Domagala
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created on 17.05.15.
  */
