@@ -8,9 +8,12 @@ import pl.piotrstaniow.organizeme.ItemAggregator;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
+import pl.piotrstaniow.organizeme.ItemAggregator;
+
 /**
  * OrganizeMe
- * Author: Piotr Staniów, Zuzanna Gniewaszewska, Sławomir Domagała
+ * Author: Piotr Staniow, Zuzanna Gniewaszewska, Slawomir Domagala
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created on 17.05.15.
  */

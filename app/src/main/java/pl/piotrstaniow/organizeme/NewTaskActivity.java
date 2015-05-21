@@ -1,6 +1,7 @@
 package pl.piotrstaniow.organizeme;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -10,21 +11,25 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
+
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class NewTaskActivity extends ActionBarActivity
-        implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
+        implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
 
     FloatingActionButton createBtn;
-    EditText taskDescET, taskDateET;
+    EditText taskDescET, taskDateET, taskTimeET;
     Spinner categorySpinner;
     Task createdTask;
 
@@ -38,11 +43,15 @@ public class NewTaskActivity extends ActionBarActivity
 
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
+        taskTimeET = (EditText) findViewById(R.id.task_time);
 
         categorySpinner = (Spinner) findViewById(R.id.category);
 
         taskDateET.setOnClickListener(this);
         taskDateET.setOnFocusChangeListener(this);
+
+        taskTimeET.setOnClickListener(this);
+        taskTimeET.setOnFocusChangeListener(this);
 
         createBtn.setOnClickListener(this);
 
@@ -74,7 +83,16 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskDateET) {
             pickDate();
         }
+        if (view == taskTimeET){
+            pickTime();
+        }
     }
+
+    private void pickTime() {
+        TimePickerDialog timePicker = new TimePickerDialog(this,this,9,0,true);
+        timePicker.show();
+    }
+
     private void pickDate() {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -95,16 +113,43 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskDateET && b) {
             pickDate();
         }
+        if (view == taskTimeET && b) {
+            pickTime();
+        }
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
+        Date date = createdTask.getDate();
+        if(!createdTask.isTimeSet())
+            date = TaskUtils.cutTime(date);
+        calendar.setTime(date);
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, day);
-        Date date = TaskUtils.cutTime(calendar.getTime());
-        createdTask.setDate(date);
+
+        date = calendar.getTime();
+        createdTask.setDate(date, false);
         taskDateET.setText(day+"."+(month+1)+"."+year);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hour, int min) {
+        Date date = createdTask.getDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        date = calendar.getTime();
+        createdTask.setDate(date, true);
+        String str = hour+":";
+        if(min < 10)
+            str += "0" + min;
+        else
+            str += "" + min;
+        taskTimeET.setText(str);
     }
 }

@@ -19,6 +19,7 @@ public class Task {
     //Don't serialize following:
     private boolean isFirstInGroup;
     private boolean isDateSet = false;
+    private boolean isTimeSet = false;
     private String predicate;
 
     public Task() {
@@ -50,14 +51,28 @@ public class Task {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Date date, boolean isTimeSet) {
+        if(isTimeSet)
+            this.isTimeSet = isTimeSet;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int y = calendar.get(Calendar.YEAR);
         int d = calendar.get(Calendar.DAY_OF_MONTH);
-        String m = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
 
+        String m = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         displayDate = String.valueOf(d) + ' ' + m + ' ' + y;
+        int h, min = 0;
+        if(isTimeSet){
+            h = calendar.get(Calendar.HOUR_OF_DAY);
+            min = calendar.get(Calendar.MINUTE);
+            displayDate += " " + h + ":";
+            if(min < 10)
+                displayDate += "0" + min;
+            else
+                displayDate += "" + min;
+
+        }
+
         this.date = date;
         isDateSet = true;
     }
@@ -84,5 +99,9 @@ public class Task {
 
     public boolean isDateSet(){
         return isDateSet;
+    }
+
+    public boolean isTimeSet(){
+        return isTimeSet;
     }
 }

@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
@@ -50,7 +54,7 @@ public class LocalQueryManager {
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
-            values.put("deadline", TaskUtils.dateToString(task.getDate()));
+            values.put("deadline", TaskUtils.dateToString(task.getDate(), task.isTimeSet()));
         long newRowId;
         newRowId = database.insert(
                 "task", null, values);
@@ -83,8 +87,13 @@ public class LocalQueryManager {
             String taskDesc = cursor.getString(1);
             String taskDate = cursor.getString(2);
             Task task = new Task();
-            if (taskDate != null) {
-                task.setDate(TaskUtils.stringToDate(taskDate));
+            boolean isTimeSet = false;
+
+            if(taskDate != null) {
+                if (taskDate.contains(" "))
+                    isTimeSet = true;
+
+                task.setDate(TaskUtils.stringToDate(taskDate), isTimeSet);
             }
             task.setTaskDesc(taskDesc);
             task.setID(id);
