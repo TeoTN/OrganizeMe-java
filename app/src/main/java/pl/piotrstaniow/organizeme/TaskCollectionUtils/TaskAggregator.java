@@ -39,12 +39,15 @@ public class TaskAggregator {
 
     public void addTask(Task newTask) {
         localQueryManager.openWritable();
-        taskList.add(newTask);
-        localQueryManager.createTask(newTask.getTaskDesc(), newTask.getTaskDate());
+        long id = localQueryManager.createTask(newTask);
         localQueryManager.close();
+
+        newTask.setID(id);
+        taskList.add(newTask);
     }
 
     public void removeTask(Task task) {
+        //localQueryManager.removeTask(task);
         taskList.remove(task);
     }
 

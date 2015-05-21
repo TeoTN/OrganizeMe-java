@@ -10,6 +10,24 @@ import java.util.Date;
  * Created on 17.05.15.
  */
 public class TaskUtils {
+    public static String dateToString(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int y = calendar.get(Calendar.YEAR);
+        int d = calendar.get(Calendar.DAY_OF_MONTH);
+        int m = calendar.get(Calendar.MONTH);
+        return ""+d+'.'+m+'.'+y;
+    }
+
+    public static Date stringToDate(String str) {
+        String[] splitted = str.split("\\.");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, Integer.parseInt(splitted[2]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(splitted[1]));
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splitted[0]));
+        return calendar.getTime();
+    }
+
     public static Date cutTime(Date date) {
         Calendar calendar = Calendar.getInstance();
 

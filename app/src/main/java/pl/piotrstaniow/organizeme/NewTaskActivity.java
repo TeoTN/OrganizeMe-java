@@ -86,7 +86,6 @@ public class NewTaskActivity extends ActionBarActivity
 
     private void createNewTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
-        String taskDate = String.valueOf(taskDateET.getText());
         createdTask.setTaskDesc(taskDesc);
         TaskAggregator.getInstance().addTask(createdTask);
         finish();
