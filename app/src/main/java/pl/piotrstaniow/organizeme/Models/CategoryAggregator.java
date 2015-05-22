@@ -1,11 +1,8 @@
 package pl.piotrstaniow.organizeme.Models;
 
 
-import android.util.Log;
-
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.ItemAggregator;
 
 import java.util.ArrayList;
 import java.util.List;

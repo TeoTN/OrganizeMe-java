@@ -1,6 +1,7 @@
 package pl.piotrstaniow.organizeme.DatabaseUtils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,8 +10,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Color;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
+import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 /**
@@ -55,6 +58,10 @@ public class LocalQueryManager {
     }
 
     public long createTask(Task task){
+        Context ctx = LocalDbHelper.getInstance().getContext();
+        String unassigned_name = ctx.getResources().getString(R.string.unassigned_category_name);
+        int unassigned_color = ctx.getResources().getColor(R.color.unassigned_category_color);
+
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
@@ -62,10 +69,11 @@ public class LocalQueryManager {
         Category category = task.getCategory();
         if(category == null){
             String[] columns = {"name"};
-            Cursor cursor = database.query("category",columns,"name='Unassigned'",null,null,null,null);
+            Cursor cursor = database.query("category",columns,"name='"+unassigned_name+"'",null,null,null,null);
+
             category = new Category();
-            category.setName("Unassinged");
-            category.setColor("#607d8b");
+            category.setName(unassigned_name);
+            category.setColor(String.valueOf(unassigned_color));
             if(cursor.getCount() == 0){
                 createCategory(category);
             }

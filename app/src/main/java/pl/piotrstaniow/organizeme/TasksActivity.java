@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
+import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
 
 
 public class TasksActivity extends ActionBarActivity {
@@ -18,11 +20,13 @@ public class TasksActivity extends ActionBarActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private FrameLayout contentFrame;
+    private ArrayAdapter drawerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        LocalDbHelper.createInstance(this);
 
         try {
             getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -33,10 +37,12 @@ public class TasksActivity extends ActionBarActivity {
 
         drawerOptions = getResources().getStringArray(R.array.drawer_options);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerAdapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions);
 
         drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
+        drawerList.setAdapter(drawerAdapter);
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
+
     }
 
     private void preloadContent() {

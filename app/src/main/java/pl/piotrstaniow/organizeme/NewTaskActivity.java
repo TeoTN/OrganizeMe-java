@@ -58,9 +58,11 @@ public class NewTaskActivity extends ActionBarActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
 
+        String unassigned_name = getResources().getString(R.string.unassigned_category_name);
+        int unassigned_color = getResources().getColor(R.color.unassigned_category_color);
         Category cat = new Category();
-        cat.setName("Unassigned");
-        cat.setName("#607d8b");
+        cat.setName(unassigned_name);
+        cat.setColor(String.valueOf(unassigned_color));
         createdTask.setCategory(cat);
     }
 

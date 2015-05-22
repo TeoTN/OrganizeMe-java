@@ -1,4 +1,4 @@
-package pl.piotrstaniow.organizeme;
+package pl.piotrstaniow.organizeme.NavigationDrawer;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import pl.piotrstaniow.organizeme.CategoriesFragment;
+import pl.piotrstaniow.organizeme.R;
+import pl.piotrstaniow.organizeme.TaskListFragment;
+import pl.piotrstaniow.organizeme.TasksActivity;
 
 /**
  * Created by Piotr Staniów on 21.05.15.

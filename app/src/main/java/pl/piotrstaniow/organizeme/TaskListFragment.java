@@ -41,8 +41,6 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         floatingMenu = (FloatingActionsMenu) view.findViewById(R.id.floating_menu);
 
-        LocalDbHelper.createInstance(getActivity());
-
         taskListView = (ListView) view.findViewById(R.id.todoList);
         taskListAdapter = new TaskListAdapter(getActivity(), new DateCategoryManager(), TaskAggregator.getInstance());
 

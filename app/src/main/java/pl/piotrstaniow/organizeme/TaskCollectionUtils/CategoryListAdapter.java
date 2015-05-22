@@ -8,10 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import pl.piotrstaniow.organizeme.ItemAggregator;
-import pl.piotrstaniow.organizeme.ItemListAdapter;
+import pl.piotrstaniow.organizeme.Models.ItemAggregator;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.R;

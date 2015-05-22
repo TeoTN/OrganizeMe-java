@@ -1,4 +1,4 @@
-package pl.piotrstaniow.organizeme;
+package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import android.widget.ListAdapter;
 

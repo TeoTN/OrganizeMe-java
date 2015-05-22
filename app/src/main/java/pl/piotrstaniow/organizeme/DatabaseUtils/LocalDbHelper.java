@@ -22,6 +22,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 }
             }
         }
+        instance.context = context;
         return instance;
     }
 
@@ -67,5 +68,9 @@ public class LocalDbHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
 
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
