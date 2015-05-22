@@ -9,6 +9,7 @@ package pl.piotrstaniow.organizeme.Models;
 public class Category {
 	private String color;
 	private String name;
+	private long id;
 
 	public Category() {
 	}
@@ -31,6 +32,14 @@ public class Category {
 
     public String toString(){
         return name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public boolean equals(Category other) {

@@ -90,18 +90,26 @@ public class LocalQueryManager {
 
     public void removeTask(Task task){
         long id = task.getID();
-        database.delete("task","id="+id,null);
+        database.delete("task", "id=" + id, null);
     }
 
 	public void createCategory(Category category) {
-		ContentValues values = new ContentValues();
-		values.put("name", category.getName());
-		values.put("color", category.getColor());
-		database.insert("category", null, values);
-	}
+        ContentValues values = new ContentValues();
+        values.put("name", category.getName());
+        values.put("color", category.getColor());
+        database.insert("category", null, values);
+    }
+
+    public void editCategory(Category category) {
+        ContentValues values = new ContentValues();
+        values.put("name", category.getName());
+        values.put("color", category.getColor());
+        database.update("category", values, "name=\"" + category.getName() + "\"", null);
+    }
 
 	public void removeCategory(Category category){
-		database.delete("category", "name=" + category.getName(), null);
+        database.delete("task", "category_name=\"" + category.getName() + "\"", null);
+		database.delete("category", "name=\"" + category.getName() + "\"", null);
 	}
 
     public List<Task> getAllTasks(){

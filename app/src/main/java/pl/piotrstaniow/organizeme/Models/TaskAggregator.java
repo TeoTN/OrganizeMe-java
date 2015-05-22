@@ -56,6 +56,11 @@ public class TaskAggregator implements ItemAggregator<Task> {
     }
 
     @Override
+    public void update(Task createdCategory) {
+
+    }
+
+    @Override
     public int getSize() {
         return taskList.size();
     }
