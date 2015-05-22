@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.util.Predicate;
 
@@ -83,6 +84,7 @@ public class TaskListAdapter extends BaseAdapter implements ItemListAdapter<Task
 
         TextView text1 = (TextView) returnView.findViewById(R.id.text1);
         TextView text2 = (TextView) returnView.findViewById(R.id.text2);
+        ImageView label = (ImageView) returnView.findViewById(R.id.category);
 
         Task task = getItem(i);
         TextView separator = (TextView) returnView.findViewById(R.id.separator);
@@ -96,6 +98,7 @@ public class TaskListAdapter extends BaseAdapter implements ItemListAdapter<Task
 
         text1.setText(task.getTaskDesc());
         text2.setText(task.getDisplayDate());
+        label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
 
         return returnView;
     }

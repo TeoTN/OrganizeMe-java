@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import pl.piotrstaniow.organizeme.ItemAggregator;
 import pl.piotrstaniow.organizeme.ItemListAdapter;
@@ -53,15 +56,15 @@ public class CategoryListAdapter extends BaseAdapter implements ItemListAdapter<
             returnView = view;
         }
 
-        TextView text1 = (TextView) returnView.findViewById(R.id.text1);
-        TextView text2 = (TextView) returnView.findViewById(R.id.text2);
+        ImageView label = (ImageView) returnView.findViewById(R.id.category);
+        TextView textViewName = (TextView) returnView.findViewById(R.id.text1);
 
-        Category task = getItem(i);
+        Category item = getItem(i);
         TextView separator = (TextView) returnView.findViewById(R.id.separator);
         separator.setVisibility(View.GONE);
 
-        text1.setText(task.getName());
-        text2.setText(task.getColor());
+        textViewName.setText(item.getName());
+        label.setBackgroundColor(Integer.parseInt(item.getColor()));
 
         return returnView;
     }
