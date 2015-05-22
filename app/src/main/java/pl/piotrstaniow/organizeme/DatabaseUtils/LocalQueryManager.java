@@ -69,7 +69,7 @@ public class LocalQueryManager {
             category = new Category();
             category.setName("Unassinged");
             category.setColor("#607d8b");
-            if(cursor.isAfterLast()){
+            if(cursor.getCount() == 0){
                 createCategory(category);
             }
         }

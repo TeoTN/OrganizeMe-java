@@ -80,4 +80,10 @@ public class TaskAggregator implements ItemAggregator<Task> {
     public List<Task> getAll() {
         return taskList;
     }
+
+    public void edit(Task task) {
+        localQueryManager.openWritable();
+        localQueryManager.editTask(task);
+        localQueryManager.close();
+    }
 }

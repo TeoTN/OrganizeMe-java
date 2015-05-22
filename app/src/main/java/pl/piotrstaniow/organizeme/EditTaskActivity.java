@@ -1,28 +1,34 @@
 package pl.piotrstaniow.organizeme;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+
 import com.getbase.floatingactionbutton.FloatingActionButton;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
-
-public class NewTaskActivity extends ActionBarActivity
-        implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener{
+public class EditTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
     FloatingActionButton createBtn;
     EditText taskDescET, taskDateET, taskTimeET;
@@ -31,9 +37,9 @@ public class NewTaskActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        CategoryAggregator ca = CategoryAggregator.getInstance();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_task);
+        setContentView(R.layout.activity_edit_task);
+        CategoryAggregator ca = CategoryAggregator.getInstance();
         createdTask = new Task();
 
         createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
@@ -58,30 +64,55 @@ public class NewTaskActivity extends ActionBarActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
 
+        Bundle bundle = getIntent().getExtras();
+        String str = bundle.getString("task");
+        String[] splitted = str.split("/");
+        createdTask.setTaskDesc(splitted[0]);
+        taskDescET.setText(splitted[0]);
+        createdTask.setID(Integer.parseInt(splitted[1]));
+        boolean isTimeSet = false;
+        if(splitted[2].contains(" ")){
+            isTimeSet = true;
+        }
+        Date date = TaskUtils.stringToDate(splitted[2]);
+        createdTask.setDate(date, isTimeSet);
         Category cat = new Category();
-        cat.setName("Unassigned");
-        cat.setName("#607d8b");
+        cat.setName(splitted[3]);
         createdTask.setCategory(cat);
+        String[] spl = splitted[2].split(" ");
+        taskDateET.setText(spl[0]);
+        if(isTimeSet)
+            taskTimeET.setText(spl[1]);
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_new_task, menu);
-        return false;
+        getMenuInflater().inflate(R.menu.menu_edit_task, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onClick(View view) {
         if (view == createBtn) {
-            createNewTask();
+            editTask();
         }
         if (view == taskDateET) {
             pickDate();
@@ -89,12 +120,6 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskTimeET){
             pickTime();
         }
-
-    }
-
-    private void pickTime() {
-        TimePickerDialog timePicker = new TimePickerDialog(this,this,9,0,true);
-        timePicker.show();
     }
 
     private void pickDate() {
@@ -104,14 +129,21 @@ public class NewTaskActivity extends ActionBarActivity
         int year = calendar.get(Calendar.YEAR);
         DatePickerDialog datePicker = new DatePickerDialog(this, this, year, month, day);
         datePicker.show();
+
     }
 
-    private void createNewTask() {
+    private void pickTime() {
+        TimePickerDialog timePicker = new TimePickerDialog(this,this,9,0,true);
+        timePicker.show();
+    }
+
+    private void editTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
         createdTask.setTaskDesc(taskDesc);
-        TaskAggregator.getInstance().add(createdTask);
+        TaskAggregator.getInstance().edit(createdTask);
         finish();
     }
+
     @Override
     public void onFocusChange(View view, boolean b) {
         if (view == taskDateET && b) {
@@ -120,22 +152,6 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskTimeET && b) {
             pickTime();
         }
-    }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        Date date = createdTask.getDate();
-        if(!createdTask.isTimeSet())
-            date = TaskUtils.cutTime(date);
-        calendar.setTime(date);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-
-        date = calendar.getTime();
-        createdTask.setDate(date, false);
-        taskDateET.setText(day+"."+(month+1)+"."+year);
     }
 
     @Override
@@ -158,13 +174,19 @@ public class NewTaskActivity extends ActionBarActivity
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Category category = (Category) adapterView.getAdapter().getItem(i);
-        createdTask.setCategory(category);
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = createdTask.getDate();
+        if(!createdTask.isTimeSet())
+            date = TaskUtils.cutTime(date);
+        calendar.setTime(date);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+
+        date = calendar.getTime();
+        createdTask.setDate(date, false);
+        taskDateET.setText(day+"."+(month+1)+"."+year);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

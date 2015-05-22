@@ -22,7 +22,8 @@ import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
-public class TaskListFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener {
+public class TaskListFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemLongClickListener {
     private TaskListAdapter taskListAdapter;
     private FloatingActionButton newTaskBtn;
     private FloatingActionsMenu floatingMenu;
@@ -88,7 +89,10 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
-                            Toast.makeText(getActivity(), "Task edit...", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+                            intent.putExtra("task",task.serialize());
+                            startActivity(intent);
+                            taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
                             ta.remove(task);
                             taskListAdapter.notifyDataSetChanged();
