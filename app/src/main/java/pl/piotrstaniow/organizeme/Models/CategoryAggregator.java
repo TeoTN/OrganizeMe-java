@@ -8,9 +8,6 @@ import pl.piotrstaniow.organizeme.ItemAggregator;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.ItemAggregator;
-
 /**
  * OrganizeMe
  * Author: Piotr Staniow, Zuzanna Gniewaszewska, Slawomir Domagala
@@ -65,13 +62,12 @@ public class CategoryAggregator implements ItemAggregator<Category> {
 
     @Override
     public List<Category> filter(Predicate<Category> predicate) {
-        List<Category> filtered = new ArrayList<>();
-        for (Category category : categoryList) {
-            if (predicate.apply(category)) {
-                filtered.add(category);
-            }
-        }
-        return filtered;
+        return null;
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryList;
     }
 
 }

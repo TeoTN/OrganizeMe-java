@@ -18,7 +18,7 @@ public class NotificationFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
         notifAdapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.notif_types, android.R.layout.simple_list_item_1);
+                R.array.notif_types, R.layout.notif_grid_item);
 
         notifGrid = (GridView) view.findViewById(R.id.notif_grid);
         notifGrid.setAdapter(notifAdapter);

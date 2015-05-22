@@ -17,4 +17,6 @@ public interface ItemAggregator<ItemType> {
     ItemType getItem(int i);
 
     List<ItemType> filter(Predicate<ItemType> predicate);
+
+    List<ItemType> getAll();
 }

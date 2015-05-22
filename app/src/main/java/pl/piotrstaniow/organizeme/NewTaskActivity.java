@@ -7,23 +7,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TimePicker;
-
+import android.widget.*;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-
-import pl.piotrstaniow.organizeme.CategoryPredicates.CategoryAllPredicate;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
 
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +51,7 @@ public class NewTaskActivity extends ActionBarActivity
         taskTimeET.setOnFocusChangeListener(this);
 
         createBtn.setOnClickListener(this);
-        List<Category> allCategories = ca.filter(new CategoryAllPredicate());
+        List<Category> allCategories = ca.getAll();
         ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this,
                 android.R.layout.simple_spinner_item,allCategories);
 
