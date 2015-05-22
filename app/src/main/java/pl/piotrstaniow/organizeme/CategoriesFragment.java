@@ -9,18 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.cocosw.bottomsheet.BottomSheet;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
-import pl.piotrstaniow.organizeme.Models.Task;
-import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryListAdapter;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
 public class CategoriesFragment extends Fragment

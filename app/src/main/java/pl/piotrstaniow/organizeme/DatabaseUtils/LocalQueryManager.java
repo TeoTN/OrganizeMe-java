@@ -6,15 +6,13 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import android.graphics.Color;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -28,7 +26,7 @@ public class LocalQueryManager {
         try {
             dbHelper = LocalDbHelper.getInstance();
         } catch (NullPointerException e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -92,6 +90,7 @@ public class LocalQueryManager {
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
+        //TODO update category
         database.update("task", values, "id="+task.getID(), null);
     }
 
@@ -122,7 +121,7 @@ public class LocalQueryManager {
 
     public List<Task> getAllTasks(){
         SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
-        sqb.setTables("'task' NATURAL JOIN 'category'");
+        sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
 
         List<Task> taskList = new ArrayList<>();
         String[] columns = {"id", "task_name", "deadline", "category_name", "color"};

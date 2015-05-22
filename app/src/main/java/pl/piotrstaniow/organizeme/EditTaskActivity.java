@@ -2,43 +2,34 @@ package pl.piotrstaniow.organizeme;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TimePicker;
-
+import android.widget.*;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-public class EditTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+
+public class EditTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
     FloatingActionButton createBtn;
     EditText taskDescET, taskDateET, taskTimeET;
     Spinner categorySpinner;
-    Task createdTask;
+    Task editedTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_task);
         CategoryAggregator ca = CategoryAggregator.getInstance();
-        createdTask = new Task();
 
         createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
 
@@ -56,47 +47,29 @@ public class EditTaskActivity extends ActionBarActivity implements View.OnClickL
 
         createBtn.setOnClickListener(this);
         List<Category> allCategories = ca.getAll();
-        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this,
-                android.R.layout.simple_spinner_item,allCategories);
+        ArrayAdapter<Category> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, allCategories);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
+        categorySpinner.setOnItemSelectedListener(this);
 
         Bundle bundle = getIntent().getExtras();
         String str = bundle.getString("task");
 
-        createdTask = DateTimeUtils.deserializeTask(str);
+        editedTask = Task.deserializeTask(str);
 
-        taskDescET.setText(createdTask.getTaskDesc());
+        taskDescET.setText(editedTask.getTaskDesc());
 
-        String[] spl = createdTask.getDisplayDate().split(" ");
+        String[] spl = editedTask.getDisplayDate().split(" ");
         taskDateET.setText(spl[0]+" "+ spl[1]+" "+spl[2]);
-        if(createdTask.isTimeSet())
+        if (editedTask.isTimeSet())
             taskTimeET.setText(spl[3]);
 
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_task, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        int selectedCat = adapter.getPosition(editedTask.getCategory());
+        categorySpinner.setSelection(selectedCat);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -129,8 +102,8 @@ public class EditTaskActivity extends ActionBarActivity implements View.OnClickL
 
     private void editTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
-        createdTask.setTaskDesc(taskDesc);
-        TaskAggregator.getInstance().edit(createdTask);
+        editedTask.setTaskDesc(taskDesc);
+        TaskAggregator.getInstance().edit(editedTask);
         finish();
     }
 
@@ -146,22 +119,32 @@ public class EditTaskActivity extends ActionBarActivity implements View.OnClickL
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int min) {
-        Date date = createdTask.getDate();
+        Date date = editedTask.getDate();
         date = DateTimeUtils.setTimeInDate(date,hour,min);
-        createdTask.setDate(date, true);
-        String displayDate = createdTask.getDisplayDate();
+        editedTask.setDate(date, true);
+        String displayDate = editedTask.getDisplayDate();
         String[] splitted = displayDate.split(" ");
         taskTimeET.setText(splitted[3]);
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Date date = createdTask.getDate();
-        date = DateTimeUtils.setDateInDate(date, year, month, day, createdTask.isTimeSet());
-        createdTask.setDate(date, false);
-        String displayDate = createdTask.getDisplayDate();
+        Date date = editedTask.getDate();
+        date = DateTimeUtils.setDateInDate(date, year, month, day, editedTask.isTimeSet());
+        editedTask.setDate(date, false);
+        String displayDate = editedTask.getDisplayDate();
         String[] splitted = displayDate.split(" ");
         taskDateET.setText(day+" "+splitted[1]+" "+year);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Category category = (Category) adapterView.getAdapter().getItem(i);
+        editedTask.setCategory(category);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

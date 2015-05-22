@@ -9,11 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.util.Predicate;
-
 import pl.piotrstaniow.organizeme.Models.ItemAggregator;
+import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.R;
-import pl.piotrstaniow.organizeme.Models.Task;
 
 import java.util.Iterator;
 import java.util.List;
@@ -99,7 +98,6 @@ public class TaskListAdapter extends BaseAdapter implements ItemListAdapter<Task
         text2.setText(task.getDisplayDate());
         //TODO check if color is empty
         label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
-
         return returnView;
     }
 

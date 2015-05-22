@@ -24,4 +24,5 @@
 	<string name="task_notif">Notifications</string>
     <string name="title_activity_edit_task">Edit Task</string>
 	<string name="unassigned_category_name">Unassigned</string>
+	<string name="uncategorized">Uncategorized</string>
 </resources>

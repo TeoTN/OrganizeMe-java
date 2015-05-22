@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
@@ -25,7 +23,7 @@ import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 public class TaskListFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemLongClickListener {
     private TaskListAdapter taskListAdapter;
-    private FloatingActionButton newTaskBtn;
+    private FloatingActionButton newTaskBtn, newCatBtn;
     private FloatingActionsMenu floatingMenu;
     private ListView taskListView;
 
@@ -46,6 +44,8 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
 
         newTaskBtn = (FloatingActionButton) view.findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
+        newCatBtn = (FloatingActionButton) view.findViewById(R.id.new_category_btn);
+        newCatBtn.setOnClickListener(this);
 
         floatingMenu = (FloatingActionsMenu) view.findViewById(R.id.floating_menu);
 
@@ -65,7 +65,15 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
         if (view == newTaskBtn) {
             createNewTaskActivity();
             floatingMenu.collapse();
+        } else if (view == newCatBtn) {
+            createNewCategoryActivity();
+            floatingMenu.collapse();
         }
+    }
+
+    private void createNewCategoryActivity() {
+        Intent intent = new Intent(getActivity(), NewCategoryActivity.class);
+        startActivity(intent);
     }
 
     private void createNewTaskActivity() {

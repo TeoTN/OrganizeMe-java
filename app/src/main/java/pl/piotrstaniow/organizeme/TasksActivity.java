@@ -31,6 +31,7 @@ public class TasksActivity extends ActionBarActivity {
         try {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (NullPointerException e) {
+            /* IGNORE */
         }
 
         preloadContent();
@@ -88,5 +89,17 @@ public class TasksActivity extends ActionBarActivity {
 
     public void closeDrawer() {
         drawerLayout.closeDrawers();
+    }
+
+    public void prepareFirstRun() {
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+        if (isFirstRun) {
+
+
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
     }
 }

@@ -30,18 +30,12 @@
 		<com.getbase.floatingactionbutton.FloatingActionButton
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:id="@+id/new_category_btn"
 				fab:fab_colorNormal="@color/accent"
 				fab:fab_title="Add category"
 				fab:fab_size="mini"
 				fab:fab_colorPressed="@color/accent_light"
-				/>
-		<com.getbase.floatingactionbutton.FloatingActionButton
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				fab:fab_colorNormal="@color/accent"
-				fab:fab_title="Notification"
-				fab:fab_size="mini"
-				fab:fab_colorPressed="@color/accent_light"
+				fab:fab_icon="@drawable/ic_action_new_label"
 				/>
 
 		<com.getbase.floatingactionbutton.FloatingActionButton

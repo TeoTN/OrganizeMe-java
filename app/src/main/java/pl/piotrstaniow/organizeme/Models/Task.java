@@ -1,10 +1,8 @@
 package pl.piotrstaniow.organizeme.Models;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
+
+import java.util.Date;
 
 /**
  * OrganizeMe
@@ -28,6 +26,25 @@ public class Task {
     public Task() {
         date = new Date();
         isFirstInGroup = false;
+    }
+
+    public static Task deserializeTask(String str) {
+        Task task = new Task();
+        String[] splitted = str.split("/");
+
+        task.setTaskDesc(splitted[0]);
+        task.setID(Integer.parseInt(splitted[1]));
+
+        boolean isTimeSet = false;
+        if (splitted[2].contains(" ")) {
+            isTimeSet = true;
+        }
+        Date date = DateTimeUtils.stringToDate(splitted[2]);
+        task.setDate(date, isTimeSet);
+        Category cat = CategoryAggregator.getInstance().getByName(splitted[3]);
+        task.setCategory(cat);
+
+        return task;
     }
 
     public String getTaskDesc() {
@@ -56,7 +73,7 @@ public class Task {
 
     public void setDate(Date date, boolean isTimeSet) {
         if(isTimeSet)
-            this.isTimeSet = isTimeSet;
+            this.isTimeSet = true;
         displayDate = DateTimeUtils.dateToDisplay(date, isTimeSet);
         this.date = date;
         isDateSet = true;
@@ -90,11 +107,12 @@ public class Task {
         return isTimeSet;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     public void setCategory(Category category){
         this.category = category;
-    }
-    public Category getCategory(){
-        return category;
     }
 
     public String serialize(){
