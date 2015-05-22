@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 /**
  * OrganizeMe
@@ -57,25 +57,7 @@ public class Task {
     public void setDate(Date date, boolean isTimeSet) {
         if(isTimeSet)
             this.isTimeSet = isTimeSet;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int y = calendar.get(Calendar.YEAR);
-        int d = calendar.get(Calendar.DAY_OF_MONTH);
-
-        String m = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-        displayDate = String.valueOf(d) + ' ' + m + ' ' + y;
-        int h, min = 0;
-        if(isTimeSet){
-            h = calendar.get(Calendar.HOUR_OF_DAY);
-            min = calendar.get(Calendar.MINUTE);
-            displayDate += " " + h + ":";
-            if(min < 10)
-                displayDate += "0" + min;
-            else
-                displayDate += "" + min;
-
-        }
-
+        displayDate = DateTimeUtils.dateToDisplay(date, isTimeSet);
         this.date = date;
         isDateSet = true;
     }
@@ -117,7 +99,7 @@ public class Task {
 
     public String serialize(){
         String str = taskDesc;
-        str +="/" + myID + "/" + TaskUtils.dateToString(date, isTimeSet)+"/"+category.getName();
+        str +="/" + myID + "/" + DateTimeUtils.dateToString(date, isTimeSet)+"/"+category.getName();
         return str;
     }
 }

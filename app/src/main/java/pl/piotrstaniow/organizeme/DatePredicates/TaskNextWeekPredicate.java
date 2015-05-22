@@ -2,7 +2,7 @@ package pl.piotrstaniow.organizeme.DatePredicates;
 
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.Models.Task;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,10 +18,10 @@ public class TaskNextWeekPredicate implements Predicate<Task> {
     public boolean apply(Task task) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        Date tomorrow = TaskUtils.cutTime(calendar.getTime());
+        Date tomorrow = DateTimeUtils.cutTime(calendar.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, 8);
-        Date then = TaskUtils.cutTime(calendar.getTime());
-        Date tdate = TaskUtils.cutTime(task.getDate());
+        Date then = DateTimeUtils.cutTime(calendar.getTime());
+        Date tdate = DateTimeUtils.cutTime(task.getDate());
         return (tdate.after(tomorrow) && tdate.before(then));
     }
 

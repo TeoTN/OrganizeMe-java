@@ -13,7 +13,7 @@ import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -124,37 +124,22 @@ public class NewTaskActivity extends ActionBarActivity
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
         Date date = createdTask.getDate();
-        if(!createdTask.isTimeSet())
-            date = TaskUtils.cutTime(date);
-        calendar.setTime(date);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-
-        date = calendar.getTime();
+        date = DateTimeUtils.setDateInDate(date, year, month, day, createdTask.isTimeSet());
         createdTask.setDate(date, false);
-        taskDateET.setText(day+"."+(month+1)+"."+year);
+        String displayDate = createdTask.getDisplayDate();
+        String[] splitted = displayDate.split(" ");
+        taskDateET.setText(day+" "+splitted[1]+" "+year);
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int min) {
         Date date = createdTask.getDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
+        date = DateTimeUtils.setTimeInDate(date,hour,min);
         createdTask.setDate(date, true);
-        String str = hour+":";
-        if(min < 10)
-            str += "0" + min;
-        else
-            str += "" + min;
-        taskTimeET.setText(str);
+        String displayDate = createdTask.getDisplayDate();
+        String[] splitted = displayDate.split(" ");
+        taskTimeET.setText(splitted[3]);
     }
 
     @Override
