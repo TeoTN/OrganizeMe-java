@@ -27,10 +27,18 @@
         <activity
             android:name=".NewCategoryActivity"
             android:label="New category"
-            android:parentActivityName=".TasksActivity">
+            android:parentActivityName=".TasksActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TasksActivity"/>
+                android:value=".TasksActivity" />
+        </activity>
+        <activity
+            android:name=".EditTaskActivity"
+            android:label="@string/title_activity_edit_task"
+            android:parentActivityName=".TasksActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.piotrstaniow.organizeme.TasksActivity" />
         </activity>
         <activity
             android:name=".EditCategoryActivity"

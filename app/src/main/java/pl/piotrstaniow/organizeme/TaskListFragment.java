@@ -3,7 +3,9 @@ package pl.piotrstaniow.organizeme;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,8 @@ import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
-public class TaskListFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener {
+public class TaskListFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemLongClickListener {
     private TaskListAdapter taskListAdapter;
     private FloatingActionButton newTaskBtn;
     private FloatingActionsMenu floatingMenu;
@@ -86,16 +89,32 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
-                            Toast.makeText(getActivity(), "Task edit...", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+                            intent.putExtra("task",task.serialize());
+                            startActivity(intent);
+                            taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
                             ta.remove(task);
                             taskListAdapter.notifyDataSetChanged();
 
                         } else if (which == R.id.task_notif) {
-                            Toast.makeText(getActivity(), "Notifications...", Toast.LENGTH_SHORT).show();
+                            pickNotif();
                         }
                     }
                 }).show();
         return true;
+    }
+
+    private void pickNotif() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("picknotif");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = new NotificationFragment();
+        newFragment.show(ft, "picknotif");
     }
 }

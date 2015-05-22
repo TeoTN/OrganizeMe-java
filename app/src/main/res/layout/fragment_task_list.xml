@@ -31,7 +31,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				fab:fab_colorNormal="@color/accent"
-				fab:fab_title="Add project"
+				fab:fab_title="Add category"
 				fab:fab_size="mini"
 				fab:fab_colorPressed="@color/accent_light"
 				/>
@@ -49,7 +49,7 @@
 				android:layout_height="wrap_content"
 				fab:fab_colorNormal="@color/accent"
 				fab:fab_size="mini"
-				fab:fab_title="New task"
+				fab:fab_title="Add task"
 				fab:fab_icon="@drawable/ic_action_new"
 				fab:fab_colorPressed="@color/accent_light"
 				android:id="@+id/new_task_btn"

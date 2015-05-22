@@ -1,7 +1,6 @@
 package pl.piotrstaniow.organizeme.Models;
 
 import com.android.internal.util.Predicate;
-
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 import pl.piotrstaniow.organizeme.ItemAggregator;
 
@@ -80,5 +79,16 @@ public class TaskAggregator implements ItemAggregator<Task> {
             }
         }
         return filtered;
+    }
+
+    @Override
+    public List<Task> getAll() {
+        return taskList;
+    }
+
+    public void edit(Task task) {
+        localQueryManager.openWritable();
+        localQueryManager.editTask(task);
+        localQueryManager.close();
     }
 }

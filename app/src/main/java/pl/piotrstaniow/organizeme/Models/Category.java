@@ -41,4 +41,8 @@ public class Category {
     public void setId(long id) {
         this.id = id;
     }
+
+    public boolean equals(Category other) {
+        return other.toString().equals(name);
+    }
 }

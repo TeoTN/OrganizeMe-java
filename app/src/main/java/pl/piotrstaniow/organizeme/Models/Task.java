@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+
 /**
  * OrganizeMe
  * <p/>
@@ -111,5 +113,11 @@ public class Task {
     }
     public Category getCategory(){
         return category;
+    }
+
+    public String serialize(){
+        String str = taskDesc;
+        str +="/" + myID + "/" + TaskUtils.dateToString(date, isTimeSet)+"/"+category.getName();
+        return str;
     }
 }
