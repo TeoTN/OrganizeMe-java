@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.getbase:floatingactionbutton:1.9.0'
     compile 'com.cocosw:bottomsheet:1.+@aar'
+    compile 'com.larswerkman:HoloColorPicker:1.5'
 }
