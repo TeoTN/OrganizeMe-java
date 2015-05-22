@@ -1,9 +1,7 @@
 package pl.piotrstaniow.organizeme;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,7 +23,7 @@ import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 
 public class EditTaskActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
@@ -66,23 +64,15 @@ public class EditTaskActivity extends ActionBarActivity implements View.OnClickL
 
         Bundle bundle = getIntent().getExtras();
         String str = bundle.getString("task");
-        String[] splitted = str.split("/");
-        createdTask.setTaskDesc(splitted[0]);
-        taskDescET.setText(splitted[0]);
-        createdTask.setID(Integer.parseInt(splitted[1]));
-        boolean isTimeSet = false;
-        if(splitted[2].contains(" ")){
-            isTimeSet = true;
-        }
-        Date date = TaskUtils.stringToDate(splitted[2]);
-        createdTask.setDate(date, isTimeSet);
-        Category cat = new Category();
-        cat.setName(splitted[3]);
-        createdTask.setCategory(cat);
-        String[] spl = splitted[2].split(" ");
-        taskDateET.setText(spl[0]);
-        if(isTimeSet)
-            taskTimeET.setText(spl[1]);
+
+        createdTask = DateTimeUtils.deserializeTask(str);
+
+        taskDescET.setText(createdTask.getTaskDesc());
+
+        String[] spl = createdTask.getDisplayDate().split(" ");
+        taskDateET.setText(spl[0]+" "+ spl[1]+" "+spl[2]);
+        if(createdTask.isTimeSet())
+            taskTimeET.setText(spl[3]);
 
     }
 
@@ -157,36 +147,21 @@ public class EditTaskActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int min) {
         Date date = createdTask.getDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
+        date = DateTimeUtils.setTimeInDate(date,hour,min);
         createdTask.setDate(date, true);
-        String str = hour+":";
-        if(min < 10)
-            str += "0" + min;
-        else
-            str += "" + min;
-        taskTimeET.setText(str);
+        String displayDate = createdTask.getDisplayDate();
+        String[] splitted = displayDate.split(" ");
+        taskTimeET.setText(splitted[3]);
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
         Date date = createdTask.getDate();
-        if(!createdTask.isTimeSet())
-            date = TaskUtils.cutTime(date);
-        calendar.setTime(date);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-
-        date = calendar.getTime();
+        date = DateTimeUtils.setDateInDate(date, year, month, day, createdTask.isTimeSet());
         createdTask.setDate(date, false);
-        taskDateET.setText(day+"."+(month+1)+"."+year);
+        String displayDate = createdTask.getDisplayDate();
+        String[] splitted = displayDate.split(" ");
+        taskDateET.setText(day+" "+splitted[1]+" "+year);
     }
 
 }

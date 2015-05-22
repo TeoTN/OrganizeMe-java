@@ -11,10 +11,7 @@ import java.util.List;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -61,7 +58,7 @@ public class LocalQueryManager {
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
-            values.put("deadline", TaskUtils.dateToString(task.getDate(), task.isTimeSet()));
+            values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
         Category category = task.getCategory();
         if(category == null){
             String[] columns = {"name"};
@@ -86,7 +83,7 @@ public class LocalQueryManager {
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
-            values.put("deadline", TaskUtils.dateToString(task.getDate(), task.isTimeSet()));
+            values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
         database.update("task", values, "id="+task.getID(), null);
     }
 
@@ -140,7 +137,7 @@ public class LocalQueryManager {
                 if (taskDate.contains(" "))
                     isTimeSet = true;
 
-                task.setDate(TaskUtils.stringToDate(taskDate), isTimeSet);
+                task.setDate(DateTimeUtils.stringToDate(taskDate), isTimeSet);
             }
             task.setTaskDesc(taskDesc);
             task.setID(id);

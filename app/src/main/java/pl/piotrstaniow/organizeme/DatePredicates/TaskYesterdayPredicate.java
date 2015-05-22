@@ -2,7 +2,7 @@ package pl.piotrstaniow.organizeme.DatePredicates;
 
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.Models.Task;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskUtils;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +18,8 @@ public class TaskYesterdayPredicate implements Predicate<Task> {
     public boolean apply(Task task) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date yesterday = TaskUtils.cutTime(calendar.getTime());
-        Date tdate = TaskUtils.cutTime(task.getDate());
+        Date yesterday = DateTimeUtils.cutTime(calendar.getTime());
+        Date tdate = DateTimeUtils.cutTime(task.getDate());
         return (tdate.compareTo(yesterday)==0);
     }
 
