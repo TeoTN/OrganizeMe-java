@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.larswerkman.holocolorpicker.ColorPicker;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
@@ -16,7 +17,7 @@ import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 public class NewCategoryActivity extends ActionBarActivity implements View.OnClickListener {
     FloatingActionButton createBtn;
     EditText categoryName;
-    EditText categoryColor;
+    ColorPicker categoryColor;
     Category createdCategory;
 
     @Override
@@ -27,7 +28,7 @@ public class NewCategoryActivity extends ActionBarActivity implements View.OnCli
 
         createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
         categoryName = (EditText) findViewById(R.id.category_name);
-        categoryColor = (EditText) findViewById(R.id.category_color);
+        categoryColor = (ColorPicker) findViewById(R.id.category_color);
 
         createBtn.setOnClickListener(this);
     }
@@ -53,7 +54,7 @@ public class NewCategoryActivity extends ActionBarActivity implements View.OnCli
 
     private void createNewCategory() {
         String name = String.valueOf(categoryName.getText());
-        String color = String.valueOf(categoryColor.getText());
+        String color = String.valueOf(categoryColor.getColor());
         createdCategory.setName(name);
         createdCategory.setColor(color);
         CategoryAggregator.getInstance().add(createdCategory);

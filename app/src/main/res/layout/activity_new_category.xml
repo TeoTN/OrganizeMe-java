@@ -25,15 +25,10 @@
 			android:layout_height="wrap_content"
 			android:padding="16dp">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Category color"
-            android:maxLength="40"
-            android:layout_marginLeft="36dp"
-            android:id="@+id/category_color"
-            style="@style/Base.TextAppearance.AppCompat.Title"
-            android:textColor="@android:color/white"/>
+		<com.larswerkman.holocolorpicker.ColorPicker
+			android:id="@+id/category_color"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 	</RelativeLayout>
 	<com.getbase.floatingactionbutton.FloatingActionButton
 			android:layout_width="wrap_content"

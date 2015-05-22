@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.larswerkman.holocolorpicker.ColorPicker;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
@@ -17,7 +18,7 @@ import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 public class EditCategoryActivity extends ActionBarActivity implements View.OnClickListener {
     FloatingActionButton saveBtn;
     EditText categoryName;
-    EditText categoryColor;
+    ColorPicker categoryColor;
     Category category;
 
     @Override
@@ -34,8 +35,8 @@ public class EditCategoryActivity extends ActionBarActivity implements View.OnCl
         categoryName = (EditText) findViewById(R.id.category_name);
         categoryName.setEnabled(false);
         categoryName.setText(intent.getStringExtra("name"));
-        categoryColor = (EditText) findViewById(R.id.category_color);
-        categoryColor.setText(intent.getStringExtra("color"));
+        categoryColor = (ColorPicker) findViewById(R.id.category_color);
+        categoryColor.setColor(Integer.parseInt(intent.getStringExtra("color")));
 
         saveBtn.setOnClickListener(this);
     }
@@ -61,7 +62,7 @@ public class EditCategoryActivity extends ActionBarActivity implements View.OnCl
 
     private void save() {
         String name = String.valueOf(categoryName.getText());
-        String color = String.valueOf(categoryColor.getText());
+        String color = String.valueOf(categoryColor.getColor());
         category.setName(name);
         category.setColor(color);
         CategoryAggregator.getInstance().update(category);
