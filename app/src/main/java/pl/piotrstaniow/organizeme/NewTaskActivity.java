@@ -22,7 +22,7 @@ public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener{
 
-    FloatingActionButton createBtn, createCat;
+    FloatingActionButton createBtn;
     EditText taskDescET, taskDateET, taskTimeET;
     Spinner categorySpinner;
     Task createdTask;

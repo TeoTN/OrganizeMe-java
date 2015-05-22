@@ -7,7 +7,7 @@
     <string name="newTaskBtn">Add task</string>
     <string name="action_new_task">New Task</string>
     <string name="action_search">Search</string>
-    <string name="action_notifications">Notifications</string>
+	<string name="action_notifications">Add notification</string>
     <string name="task_desc_hint">Task description</string>
     <string name="task_date_hint">Date</string>
     <string name="task_time_hint">Time</string>
@@ -25,4 +25,6 @@
     <string name="title_activity_edit_task">Edit Task</string>
 	<string name="unassigned_category_name">Unassigned</string>
 	<string name="uncategorized">Uncategorized</string>
+	<string name="drawer_open">Open menu</string>
+	<string name="drawer_close">Close menu</string>
 </resources>
