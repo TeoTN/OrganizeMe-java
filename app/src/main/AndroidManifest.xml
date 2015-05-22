@@ -32,6 +32,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TasksActivity"/>
         </activity>
+        <activity
+            android:name=".EditCategoryActivity"
+            android:label="Edit category"
+            android:parentActivityName=".TasksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TasksActivity"/>
+        </activity>
     </application>
 
 </manifest>
