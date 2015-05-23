@@ -95,7 +95,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
-                            Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+                            Intent intent = new Intent(getActivity(), NewTaskActivity.class);
                             intent.putExtra("task",task.serialize());
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();

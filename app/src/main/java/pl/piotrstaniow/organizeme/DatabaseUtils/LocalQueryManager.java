@@ -90,7 +90,7 @@ public class LocalQueryManager {
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
-        //TODO update category
+        values.put("category_name", task.getCategory().getName());
         database.update("task", values, "id="+task.getID(), null);
     }
 
