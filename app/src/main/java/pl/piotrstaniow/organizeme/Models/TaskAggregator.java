@@ -46,6 +46,12 @@ public class TaskAggregator implements ItemAggregator<Task> {
         taskList.add(newTask);
     }
 
+    public void edit(Task task) {
+        localQueryManager.openWritable();
+        localQueryManager.editTask(task);
+        localQueryManager.close();
+    }
+
     @Override
     public void remove(Task task) {
         localQueryManager.openWritable();
@@ -85,9 +91,4 @@ public class TaskAggregator implements ItemAggregator<Task> {
         return taskList;
     }
 
-    public void edit(Task task) {
-        localQueryManager.openWritable();
-        localQueryManager.editTask(task);
-        localQueryManager.close();
-    }
 }
