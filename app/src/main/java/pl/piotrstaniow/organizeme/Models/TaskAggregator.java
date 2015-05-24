@@ -91,4 +91,11 @@ public class TaskAggregator implements ItemAggregator<Task> {
         localQueryManager.editTask(task);
         localQueryManager.close();
     }
+
+    public void markAsDone(Task task) {
+        localQueryManager.openWritable();
+        localQueryManager.archiveTask(task, new java.util.Date());
+        taskList.remove(task);
+        localQueryManager.close();
+    }
 }

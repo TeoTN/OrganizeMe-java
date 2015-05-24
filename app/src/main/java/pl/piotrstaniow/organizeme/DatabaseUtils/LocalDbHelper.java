@@ -41,6 +41,13 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "category_name TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
 
+        String createArchivedTaskTable = "CREATE TABLE IF NOT EXISTS archived_task (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "task_name TEXT, " +
+                "deadline TEXT, " +
+                "category_name TEXT, " +
+                "FOREIGN KEY(category_name) REFERENCES category(name))";
+
         String createLabelTable = "CREATE TABLE IF NOT EXISTS label (name TEXT UNIQUE)";
 
         String createTaskLabelTable = "CREATE TABLE IF NOT EXISTS task_label (" +
@@ -53,6 +60,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         database.execSQL(createTaskTable);
         database.execSQL(createLabelTable);
         database.execSQL(createTaskLabelTable);
+        database.execSQL(createArchivedTaskTable);
     }
 
     public LocalDbHelper(Context context) {

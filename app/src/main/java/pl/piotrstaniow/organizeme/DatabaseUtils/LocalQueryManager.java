@@ -6,7 +6,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pl.piotrstaniow.organizeme.Models.Category;
@@ -55,10 +57,20 @@ public class LocalQueryManager {
     }
 
     public long createTask(Task task){
+        return database.insert("task", null, getContentValues(task));
+    }
+
+    private ContentValues getContentValues(Task task) {
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
+        Category category = getOrCreateCategory(task);
+        values.put("category_name", category.getName());
+        return values;
+    }
+
+    private Category getOrCreateCategory(Task task) {
         Category category = task.getCategory();
         if(category == null){
             String[] columns = {"name"};
@@ -70,13 +82,7 @@ public class LocalQueryManager {
                 createCategory(category);
             }
         }
-
-        values.put("category_name", category.getName());
-
-        long newRowId;
-        newRowId = database.insert(
-                "task", null, values);
-        return newRowId;
+        return category;
     }
 
     public void editTask(Task task){
@@ -87,6 +93,12 @@ public class LocalQueryManager {
         database.update("task", values, "id="+task.getID(), null);
     }
 
+    public void archiveTask(Task task, Date time) {
+        ContentValues values = getContentValues(task);
+        values.put("done", DateTimeUtils.dateToString(time, true));
+        database.insert("archived_task", null, values);
+        removeTask(task);
+    }
 
     public void removeTask(Task task){
         long id = task.getID();

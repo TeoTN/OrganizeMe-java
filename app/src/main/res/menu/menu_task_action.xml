@@ -3,4 +3,5 @@
 	<item android:id="@+id/task_edit" android:title="@string/task_edit" android:icon="@drawable/ic_edit"/>
 	<item android:id="@+id/task_delete" android:title="@string/task_delete" android:icon="@drawable/ic_delete"/>
 	<item android:id="@+id/task_notif" android:title="@string/task_notif" android:icon="@drawable/ic_notif"/>
+	<item android:id="@+id/task_done" android:title="@string/task_done" android:icon="@drawable/ic_done"/>
 </menu>
