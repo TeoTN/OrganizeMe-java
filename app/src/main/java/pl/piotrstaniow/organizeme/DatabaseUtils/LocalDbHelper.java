@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class LocalDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "OrganizeMeDB";
     private static LocalDbHelper instance = null;
     private Context context;
@@ -18,7 +18,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         if (instance == null) {
             synchronized(LocalDbHelper.class) {
                 if (instance == null) {
-                    instance = new LocalDbHelper(context);
+                    instance = new LocalDbHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
                 }
             }
         }
@@ -41,13 +41,6 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "category_name TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
 
-        String createArchivedTaskTable = "CREATE TABLE IF NOT EXISTS archived_task (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "task_name TEXT, " +
-                "deadline TEXT, " +
-                "category_name TEXT, " +
-                "FOREIGN KEY(category_name) REFERENCES category(name))";
-
         String createLabelTable = "CREATE TABLE IF NOT EXISTS label (name TEXT UNIQUE)";
 
         String createTaskLabelTable = "CREATE TABLE IF NOT EXISTS task_label (" +
@@ -60,11 +53,11 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         database.execSQL(createTaskTable);
         database.execSQL(createLabelTable);
         database.execSQL(createTaskLabelTable);
-        database.execSQL(createArchivedTaskTable);
+        createArchivedTaskTable(database);
     }
 
-    public LocalDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public LocalDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, null, version);
     }
 
     @Override
@@ -74,6 +67,19 @@ public class LocalDbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
+        if(i == 1 && i2 == 2) {
+            createArchivedTaskTable(sqLiteDatabase);
+        }
+    }
 
+    private void createArchivedTaskTable(SQLiteDatabase sqLiteDatabase) {
+        String createArchivedTaskTable = "CREATE TABLE IF NOT EXISTS archived_task (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "task_name TEXT, " +
+                "deadline TEXT, " +
+                "category_name TEXT, " +
+                "done TEXT, " +
+                "FOREIGN KEY(category_name) REFERENCES category(name))";
+        sqLiteDatabase.execSQL(createArchivedTaskTable);
     }
 }

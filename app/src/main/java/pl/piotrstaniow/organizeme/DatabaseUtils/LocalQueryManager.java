@@ -2,6 +2,7 @@ package pl.piotrstaniow.organizeme.DatabaseUtils;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -45,6 +46,7 @@ public class LocalQueryManager {
     public void openWritable() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
+
     @Override
     public void finalize() throws Throwable {
         database.close();
@@ -103,6 +105,10 @@ public class LocalQueryManager {
     public void removeTask(Task task){
         long id = task.getID();
         database.delete("task", "id=" + id, null);
+    }
+
+    public long countArchivedTasks() {
+        return DatabaseUtils.queryNumEntries(database, "archived_task");
     }
 
 	public void createCategory(Category category) {

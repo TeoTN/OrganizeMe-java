@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 
 
 public class TasksActivity extends ActionBarActivity {
@@ -18,6 +22,7 @@ public class TasksActivity extends ActionBarActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private FrameLayout contentFrame;
+    private TextView drawerInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,19 @@ public class TasksActivity extends ActionBarActivity {
 
         drawerOptions = getResources().getStringArray(R.array.drawer_options);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerInfo = (TextView) findViewById(R.id.done_tasks);
+        refreshArchivedTaskInfo();
 
         drawerList = (ListView) findViewById(R.id.drawer_list);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
+    }
+
+    private void refreshArchivedTaskInfo() {
+        LocalDbHelper.createInstance(this);
+        LocalQueryManager.getInstance().openWritable();
+        drawerInfo.setText(getResources().getText(R.string.done_tasks_title) + ": " + LocalQueryManager.getInstance().countArchivedTasks());
+        LocalQueryManager.getInstance().close();
     }
 
     private void preloadContent() {
