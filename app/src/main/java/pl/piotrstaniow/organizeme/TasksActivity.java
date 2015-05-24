@@ -1,6 +1,5 @@
 package pl.piotrstaniow.organizeme;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,7 +67,7 @@ public class TasksActivity extends ActionBarActivity {
 
     private void preloadContent() {
         contentFrame = (FrameLayout) findViewById(R.id.content_frame);
-        Fragment fragment = new TaskListFragment();
+        Fragment fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_DATE);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -94,11 +93,6 @@ public class TasksActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void createCategoriesActivity() {
-        Intent intent = new Intent(this, CategoriesFragment.class);
-        startActivity(intent);
     }
 
     public String[] getDrawerOptions() {

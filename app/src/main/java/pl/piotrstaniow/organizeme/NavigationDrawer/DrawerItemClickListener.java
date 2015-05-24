@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import pl.piotrstaniow.organizeme.CategoriesFragment;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskListFragment;
 import pl.piotrstaniow.organizeme.TasksActivity;
@@ -30,10 +29,11 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
 
     private void selectItem(int position) {
         Fragment fragment = null;
+
         if (drawerOptions[position].equals("All tasks")) {
-            fragment = new TaskListFragment();
+            fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_DATE);
         } else if (drawerOptions[position].equals("Categories")) {
-            fragment = new CategoriesFragment();
+            fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_CATEGORY);
         }
 
         FragmentManager fragmentManager = ((TasksActivity) context).getSupportFragmentManager();
