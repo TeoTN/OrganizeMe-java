@@ -2,7 +2,6 @@ package pl.piotrstaniow.organizeme.Models;
 
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.ItemAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,12 @@ public class TaskAggregator implements ItemAggregator<Task> {
         taskList.add(newTask);
     }
 
+    public void edit(Task task) {
+        localQueryManager.openWritable();
+        localQueryManager.editTask(task);
+        localQueryManager.close();
+    }
+
     @Override
     public void remove(Task task) {
         localQueryManager.openWritable();
@@ -86,16 +91,11 @@ public class TaskAggregator implements ItemAggregator<Task> {
         return taskList;
     }
 
-    public void edit(Task task) {
-        localQueryManager.openWritable();
-        localQueryManager.editTask(task);
-        localQueryManager.close();
-    }
-
     public void markAsDone(Task task) {
         localQueryManager.openWritable();
         localQueryManager.archiveTask(task, new java.util.Date());
         taskList.remove(task);
         localQueryManager.close();
     }
+
 }

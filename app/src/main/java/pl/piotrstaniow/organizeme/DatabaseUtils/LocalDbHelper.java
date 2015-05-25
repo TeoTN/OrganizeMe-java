@@ -1,8 +1,11 @@
 package pl.piotrstaniow.organizeme.DatabaseUtils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import pl.piotrstaniow.organizeme.R;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -18,10 +21,11 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         if (instance == null) {
             synchronized(LocalDbHelper.class) {
                 if (instance == null) {
-                    instance = new LocalDbHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+                    instance = new LocalDbHelper(context);
                 }
             }
         }
+        instance.context = context;
         return instance;
     }
 
@@ -32,7 +36,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
             return instance;
     }
 
-    private void CreateTables(SQLiteDatabase database){
+    private void createTables(SQLiteDatabase database){
         String createCategoryTable = "CREATE TABLE IF NOT EXISTS category (name TEXT UNIQUE, color TEXT)";
         String createTaskTable = "CREATE TABLE IF NOT EXISTS task (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -56,22 +60,46 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         createArchivedTaskTable(database);
     }
 
-    public LocalDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, null, version);
+    private void createMandatoryEntries(SQLiteDatabase database){
+        String unassigned_name = context.getResources().getString(R.string.unassigned_category_name);
+        int unassigned_color = context.getResources().getColor(R.color.unassigned_category_color);
+
+        ContentValues values = new ContentValues();
+        values.put("name", unassigned_name);
+        values.put("color", unassigned_color);
+        database.insert("category", null, values);
+
+    }
+    private void dropTables(SQLiteDatabase database){
+        String[] tables = {"task", "category", "label", "task_label"};
+        for (String s : tables){
+            database.execSQL("DROP TABLE IF EXISTS " + s);
+        }
+    }
+
+    public LocalDbHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        CreateTables(sqLiteDatabase);
+        createTables(sqLiteDatabase);
+        createMandatoryEntries(sqLiteDatabase);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        if(i == 1 && i2 == 2) {
-            createArchivedTaskTable(sqLiteDatabase);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if(oldVersion == 1){
+            dropTables(sqLiteDatabase);
+            createTables(sqLiteDatabase);
+            createMandatoryEntries(sqLiteDatabase);
         }
     }
 
+    public Context getContext() {
+            return context;
+    }
+    
     private void createArchivedTaskTable(SQLiteDatabase sqLiteDatabase) {
         String createArchivedTaskTable = "CREATE TABLE IF NOT EXISTS archived_task (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -1,17 +1,21 @@
 package pl.piotrstaniow.organizeme;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
+import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
 
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
@@ -23,16 +27,14 @@ public class TasksActivity extends ActionBarActivity {
     private ListView drawerList;
     private FrameLayout contentFrame;
     private TextView drawerInfo;
+    private ArrayAdapter drawerAdapter;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-
-        try {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException e) {
-        }
+        LocalDbHelper.createInstance(this);
 
         preloadContent();
 
@@ -40,10 +42,22 @@ public class TasksActivity extends ActionBarActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerInfo = (TextView) findViewById(R.id.done_tasks);
         refreshArchivedTaskInfo();
+        drawerAdapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions);
 
         drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
+        drawerList.setAdapter(drawerAdapter);
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
+
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close);
+
+        drawerLayout.setDrawerListener(drawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        drawerToggle.syncState();
     }
 
     private void refreshArchivedTaskInfo() {
@@ -53,9 +67,22 @@ public class TasksActivity extends ActionBarActivity {
         LocalQueryManager.getInstance().close();
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
     private void preloadContent() {
         contentFrame = (FrameLayout) findViewById(R.id.content_frame);
-        Fragment fragment = new TaskListFragment();
+        Fragment fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_DATE);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -73,18 +100,15 @@ public class TasksActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void createCategoriesActivity() {
-        Intent intent = new Intent(this, CategoriesFragment.class);
-        startActivity(intent);
     }
 
     public String[] getDrawerOptions() {
@@ -97,5 +121,17 @@ public class TasksActivity extends ActionBarActivity {
 
     public void closeDrawer() {
         drawerLayout.closeDrawers();
+    }
+
+    public void prepareFirstRun() {
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+        if (isFirstRun) {
+
+
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
     }
 }

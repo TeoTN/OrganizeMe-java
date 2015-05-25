@@ -2,10 +2,9 @@ package pl.piotrstaniow.organizeme;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -28,15 +27,73 @@ public class NewTaskActivity extends ActionBarActivity
     EditText taskDescET, taskDateET, taskTimeET;
     Spinner categorySpinner;
     Task createdTask;
+    boolean isEdit = false;
+    ArrayAdapter<Category> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        CategoryAggregator ca = CategoryAggregator.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
+        CategoryAggregator ca = CategoryAggregator.getInstance();
+        List<Category> allCategories = ca.getAll();
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, allCategories);
+
         createdTask = new Task();
 
+        setVariables();
+        manageEdit();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == createBtn && !isEdit) {
+            createNewTask();
+        }
+        if (view == createBtn && isEdit) {
+            editTask();
+        }
+        if (view == taskDateET) {
+            pickDate();
+        }
+        if (view == taskTimeET){
+            pickTime();
+        }
+
+    }
+    private void manageEdit(){
+        Intent i = getIntent();
+        if(!i.hasExtra("task"))
+            return;
+
+        Bundle bundle = getIntent().getExtras();
+        String str = bundle.getString("task");
+
+        isEdit = true;
+        createdTask = Task.deserializeTask(str);
+        taskDescET.setText(createdTask.getTaskDesc());
+
+        String[] spl = createdTask.getDisplayDate().split(" ");
+        taskDateET.setText(spl[0]+" "+ spl[1]+" "+spl[2]);
+        if (createdTask.isTimeSet())
+            taskTimeET.setText(spl[3]);
+
+
+        int selectedCat = adapter.getPosition(createdTask.getCategory());
+        categorySpinner.setSelection(selectedCat);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void manageCategorySpinner(){
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
+        categorySpinner.setOnItemSelectedListener(this);
+    }
+
+    private void setVariables(){
         createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
+        createBtn.setOnClickListener(this);
 
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
@@ -49,47 +106,7 @@ public class NewTaskActivity extends ActionBarActivity
 
         taskTimeET.setOnClickListener(this);
         taskTimeET.setOnFocusChangeListener(this);
-
-        createBtn.setOnClickListener(this);
-        List<Category> allCategories = ca.getAll();
-        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this,
-                android.R.layout.simple_spinner_item,allCategories);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);
-
-        Category cat = new Category();
-        cat.setName("Unassigned");
-        cat.setName("#607d8b");
-        createdTask.setCategory(cat);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_new_task, menu);
-        return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        if (view == createBtn) {
-            createNewTask();
-        }
-        if (view == taskDateET) {
-            pickDate();
-        }
-        if (view == taskTimeET){
-            pickTime();
-        }
-
+        manageCategorySpinner();
     }
 
     private void pickTime() {
@@ -104,6 +121,13 @@ public class NewTaskActivity extends ActionBarActivity
         int year = calendar.get(Calendar.YEAR);
         DatePickerDialog datePicker = new DatePickerDialog(this, this, year, month, day);
         datePicker.show();
+    }
+
+    private void editTask() {
+        String taskDesc = String.valueOf(taskDescET.getText());
+        createdTask.setTaskDesc(taskDesc);
+        TaskAggregator.getInstance().edit(createdTask);
+        finish();
     }
 
     private void createNewTask() {
@@ -150,6 +174,11 @@ public class NewTaskActivity extends ActionBarActivity
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        String unassigned_name = getResources().getString(R.string.unassigned_category_name);
+        int unassigned_color = getResources().getColor(R.color.unassigned_category_color);
+        Category cat = new Category();
+        cat.setName(unassigned_name);
+        cat.setColor(String.valueOf(unassigned_color));
+        createdTask.setCategory(cat);
     }
 }

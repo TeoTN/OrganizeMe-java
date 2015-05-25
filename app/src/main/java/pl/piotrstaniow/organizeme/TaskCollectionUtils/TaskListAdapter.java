@@ -1,22 +1,16 @@
 package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.internal.util.Predicate;
-
-import pl.piotrstaniow.organizeme.ItemAggregator;
-import pl.piotrstaniow.organizeme.ItemListAdapter;
-import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.Models.Task;
+import pl.piotrstaniow.organizeme.R;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,93 +19,101 @@ import java.util.List;
  * Email: staniowp@gmail.com oszka496@gmail.com slawomir.karol.domagala@gmail.com
  * Created: 12.05.15
  */
-public class TaskListAdapter extends BaseAdapter implements ItemListAdapter<Task> {
+public class TaskListAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
     private Context ctx;
-    private ItemAggregator<Task> aggregator;
-    private TaskCategoryManager categoryMgr;
+    private AbstractTaskGroupProvider categoryMgr;
 
-    public TaskListAdapter(Context ctx, TaskCategoryManager categoryMgr, TaskAggregator taskAggregator) {
+    public TaskListAdapter(Context ctx, AbstractTaskGroupProvider categoryMgr) {
         this.ctx = ctx;
         this.categoryMgr = categoryMgr;
-        aggregator = taskAggregator;
     }
 
     @Override
-    public int getCount() {
-        return aggregator.getSize();
+    public int getGroupCount() {
+        return categoryMgr.getGroupCount();
     }
 
     @Override
-    public Task getItem(int id) {
-        int ds = 0;
-        int p = 0;
-        Iterator groupIterator = categoryMgr.getTasksCategorizedIterator();
-        while (groupIterator.hasNext()) {
-            ArrayMap.Entry group = (ArrayMap.Entry) groupIterator.next();
-            List<Task> tasks = (List<Task>) group.getValue();
-            Predicate<Task> predicate = (Predicate<Task>) group.getKey();
-
-            if (id >= ds + tasks.size()) {
-                ds += tasks.size();
-            }
-            else {
-                Task task = tasks.get(id - ds);
-                if (task == tasks.get(0)) {
-                    task.setIsFirstInGroup(true);
-                    task.setPredicate(predicate.toString());
-                }
-                return task;
-            }
-        }
-
-        return null;
+    public int getChildrenCount(int i) {
+        return categoryMgr.getTaskCount(i);
     }
 
     @Override
-    public long getItemId(int i) {
-        return getItem(i).getID();
+    public List<Task> getGroup(int i) {
+        return categoryMgr.getGroup(i);
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View returnView;
+    public Task getChild(int i, int i1) {
+        return getGroup(i).get(i1);
+    }
+
+    @Override
+    public long getGroupId(int i) {
+        return getGroup(i).hashCode();
+    }
+
+    @Override
+    public long getChildId(int i, int i1) {
+        return getChild(i, i1).getID();
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean expanded, View view, ViewGroup viewGroup) {
+        String title = categoryMgr.getGroupName(groupPosition);
         if (view == null) {
-            LayoutInflater inflater = LayoutInflater.from(ctx);
-            returnView =  inflater.inflate(R.layout.task_layout, viewGroup, false);
-        } else {
-            returnView = view;
+            LayoutInflater layoutInflater = (LayoutInflater) ctx
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.category_layout, viewGroup, false);
+        }
+        TextView item = (TextView) view.findViewById(R.id.task_group_title);
+        CardView card = (CardView) view.findViewById(R.id.category_card);
+        card.setRadius((float) 0.0);
+        item.setText(title);
+        return view;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean expanded, View view, ViewGroup viewGroup) {
+        Task task = getChild(groupPosition, childPosition);
+
+        if (view == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) ctx
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.task_layout, viewGroup, false);
         }
 
-        TextView text1 = (TextView) returnView.findViewById(R.id.text1);
-        TextView text2 = (TextView) returnView.findViewById(R.id.text2);
-        ImageView label = (ImageView) returnView.findViewById(R.id.category);
-
-        Task task = getItem(i);
-        TextView separator = (TextView) returnView.findViewById(R.id.separator);
-        if (task.isFirstInGroup()) {
-            separator.setVisibility(View.VISIBLE);
-            separator.setText(task.getPredicate());
-        }
-        else {
-            separator.setVisibility(View.GONE);
-        }
+        TextView text1 = (TextView) view.findViewById(R.id.text1);
+        TextView text2 = (TextView) view.findViewById(R.id.text2);
+        ImageView label = (ImageView) view.findViewById(R.id.category);
 
         text1.setText(task.getTaskDesc());
         text2.setText(task.getDisplayDate());
+        //TODO check if color is empty
         label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
 
-        return returnView;
+        CardView card = (CardView) view.findViewById(R.id.task_card);
+        card.setRadius((float) 0.0);
+
+        return view;
     }
 
     @Override
-    public void remove(Task item) {
-        aggregator.remove(item);
+    public boolean isChildSelectable(int i, int i1) {
+        return true;
+    }
+
+    public void refresh() {
         notifyDataSetChanged();
     }
 
     @Override
-    public void add(Task newTask) {
-        aggregator.add(newTask);
-        notifyDataSetChanged();
+    public void onClick(View view) {
+
     }
 }

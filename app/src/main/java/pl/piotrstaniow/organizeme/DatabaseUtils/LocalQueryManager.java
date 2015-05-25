@@ -1,6 +1,7 @@
 package pl.piotrstaniow.organizeme.DatabaseUtils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
@@ -14,7 +15,11 @@ import java.util.List;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
+import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -28,7 +33,7 @@ public class LocalQueryManager {
         try {
             dbHelper = LocalDbHelper.getInstance();
         } catch (NullPointerException e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -75,11 +80,16 @@ public class LocalQueryManager {
     private Category getOrCreateCategory(Task task) {
         Category category = task.getCategory();
         if(category == null){
+            Context ctx = LocalDbHelper.getInstance().getContext();
+            String unassigned_name = ctx.getResources().getString(R.string.unassigned_category_name);
+            int unassigned_color = ctx.getResources().getColor(R.color.unassigned_category_color);
+            
             String[] columns = {"name"};
-            Cursor cursor = database.query("category",columns,"name='Unassigned'",null,null,null,null);
+            Cursor cursor = database.query("category",columns,"name='"+unassigned_name+"'",null,null,null,null);
+
             category = new Category();
-            category.setName("Unassinged");
-            category.setColor("#607d8b");
+            category.setName(unassigned_name);
+            category.setColor(String.valueOf(unassigned_color));
             if(cursor.getCount() == 0){
                 createCategory(category);
             }
@@ -92,6 +102,7 @@ public class LocalQueryManager {
         values.put("task_name", task.getTaskDesc());
         if(task.isDateSet())
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
+        values.put("category_name", task.getCategory().getName());
         database.update("task", values, "id="+task.getID(), null);
     }
 
@@ -132,7 +143,7 @@ public class LocalQueryManager {
 
     public List<Task> getAllTasks(){
         SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
-        sqb.setTables("'task' NATURAL JOIN 'category'");
+        sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
 
         List<Task> taskList = new ArrayList<>();
         String[] columns = {"id", "task_name", "deadline", "category_name", "color"};

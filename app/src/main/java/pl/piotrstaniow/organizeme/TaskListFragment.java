@@ -9,29 +9,59 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ExpandableListView;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateCategoryManager;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.AbstractTaskGroupProvider;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryGroupProvider;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
-public class TaskListFragment extends Fragment implements View.OnClickListener,
-        AdapterView.OnItemLongClickListener {
+public class TaskListFragment extends Fragment implements View.OnClickListener, ExpandableListView.OnChildClickListener {
+    public static final int GROUP_BY_DATE = 13;
+    public static final int GROUP_BY_CATEGORY = 14;
+    private static final String GROUP_METHOD = "GroupingMethodParameter";
+    private int groupingMethod;
+
+    private AbstractTaskGroupProvider manager;
     private TaskListAdapter taskListAdapter;
-    private FloatingActionButton newTaskBtn;
+    private FloatingActionButton newTaskBtn, newCatBtn;
     private FloatingActionsMenu floatingMenu;
-    private ListView taskListView;
+    private ExpandableListView taskList;
+
+    public TaskListFragment() {
+
+    }
+
+    public static TaskListFragment newInstance(int method) {
+        TaskListFragment fragment = new TaskListFragment();
+        Bundle args = new Bundle();
+        args.putInt(GROUP_METHOD, method);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            groupingMethod = getArguments().getInt(GROUP_METHOD);
+        }
+        switch (groupingMethod) {
+            case GROUP_BY_DATE:
+                manager = new DateGroupProvider();
+                break;
+            case GROUP_BY_CATEGORY:
+                manager = new CategoryGroupProvider();
+                break;
+            default:
+                manager = new DateGroupProvider();
+                break;
+        }
 
     }
 
@@ -41,25 +71,24 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         floatingMenu = (FloatingActionsMenu) view.findViewById(R.id.floating_menu);
 
-        LocalDbHelper.createInstance(getActivity());
-
-        taskListView = (ListView) view.findViewById(R.id.todoList);
-        taskListAdapter = new TaskListAdapter(getActivity(), new DateCategoryManager(), TaskAggregator.getInstance());
-
         newTaskBtn = (FloatingActionButton) view.findViewById(R.id.new_task_btn);
         newTaskBtn.setOnClickListener(this);
+        newCatBtn = (FloatingActionButton) view.findViewById(R.id.new_category_btn);
+        newCatBtn.setOnClickListener(this);
 
-        floatingMenu = (FloatingActionsMenu) view.findViewById(R.id.floating_menu);
+        taskListAdapter = new TaskListAdapter(getActivity(), manager);
 
-        taskListView.setAdapter(taskListAdapter);
-        taskListView.setOnItemLongClickListener(this);
+        taskList = (ExpandableListView) view.findViewById(R.id.task_list);
+        taskList.setAdapter(taskListAdapter);
+        taskList.setOnChildClickListener(this);
+        taskList.setGroupIndicator(null);
+
         return view;
     }
 
     public void onResume() {
         super.onResume();
-        taskListAdapter.notifyDataSetChanged();
-        taskListView.deferNotifyDataSetChanged();
+        taskListAdapter.refresh();
     }
 
     @Override
@@ -67,7 +96,15 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
         if (view == newTaskBtn) {
             createNewTaskActivity();
             floatingMenu.collapse();
+        } else if (view == newCatBtn) {
+            createNewCategoryActivity();
+            floatingMenu.collapse();
         }
+    }
+
+    private void createNewCategoryActivity() {
+        Intent intent = new Intent(getActivity(), NewCategoryActivity.class);
+        startActivity(intent);
     }
 
     private void createNewTaskActivity() {
@@ -76,9 +113,9 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        final TaskListAdapter taskListAdapter = (TaskListAdapter) adapterView.getAdapter();
-        final Task task = taskListAdapter.getItem(position);
+    public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+        final TaskListAdapter taskListAdapter = (TaskListAdapter) expandableListView.getExpandableListAdapter();
+        final Task task = taskListAdapter.getChild(i, i1);
         final TaskAggregator ta = TaskAggregator.getInstance();
 
         new BottomSheet.Builder(getActivity(), R.style.BottomSheet_Dialog)
@@ -89,8 +126,8 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
-                            Intent intent = new Intent(getActivity(), EditTaskActivity.class);
-                            intent.putExtra("task", task.serialize());
+                            Intent intent = new Intent(getActivity(), NewTaskActivity.class);
+                            intent.putExtra("task",task.serialize());
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
@@ -105,7 +142,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener,
                         }
                     }
                 }).show();
-        return true;
+        return false;
     }
 
     private void pickNotif() {

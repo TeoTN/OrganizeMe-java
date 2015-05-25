@@ -1,11 +1,8 @@
 package pl.piotrstaniow.organizeme.Models;
 
 
-import android.util.Log;
-
 import com.android.internal.util.Predicate;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.ItemAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +27,6 @@ public class CategoryAggregator implements ItemAggregator<Category> {
         localQueryManager.close();
     }
 
-    private void rearrangeIds() {
-        long id = 0;
-        for(Category c: categoryList) {
-            c.setId(id);
-            id += 1;
-        }
-    }
-
     public static CategoryAggregator getInstance() {
         if (instance == null) {
             synchronized (CategoryAggregator.class) {
@@ -47,6 +36,14 @@ public class CategoryAggregator implements ItemAggregator<Category> {
             }
         }
         return instance;
+    }
+
+    private void rearrangeIds() {
+        long id = 0;
+        for (Category c : categoryList) {
+            c.setId(id);
+            id += 1;
+        }
     }
 
     @Override
@@ -95,6 +92,15 @@ public class CategoryAggregator implements ItemAggregator<Category> {
     @Override
     public List<Category> getAll() {
         return categoryList;
+    }
+
+    public Category getByName(String name) {
+        for (Category c : categoryList) {
+            if (c.getName().equals(name)) {
+                return c;
+            }
+        }
+        return null;
     }
 
 }

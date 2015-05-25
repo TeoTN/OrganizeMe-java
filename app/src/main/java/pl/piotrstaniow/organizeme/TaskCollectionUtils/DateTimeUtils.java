@@ -4,9 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.piotrstaniow.organizeme.Models.Category;
-import pl.piotrstaniow.organizeme.Models.Task;
-
 /**
  * OrganizeMe
  * Author: Piotr Staniów, Zuzanna Gniewaszewska, Sławomir Domagała
@@ -69,25 +66,6 @@ public class DateTimeUtils {
         return calendar.getTime();
     }
 
-    public static Task deserializeTask(String str){
-        Task task = new Task();
-        String[] splitted = str.split("/");
-
-        task.setTaskDesc(splitted[0]);
-        task.setID(Integer.parseInt(splitted[1]));
-
-        boolean isTimeSet = false;
-        if(splitted[2].contains(" ")){
-            isTimeSet = true;
-        }
-        Date date = DateTimeUtils.stringToDate(splitted[2]);
-        task.setDate(date, isTimeSet);
-        Category cat = new Category();
-        cat.setName(splitted[3]);
-        task.setCategory(cat);
-
-        return task;
-    }
     //Function used while adding or editing task
     public static Date setTimeInDate(Date date, int hour, int min){
         Calendar calendar = Calendar.getInstance();

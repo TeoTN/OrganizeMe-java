@@ -56,7 +56,7 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_task, menu);
+        getMenuInflater().inflate(R.menu.menu_task_action, menu);
         return true;
     }
 

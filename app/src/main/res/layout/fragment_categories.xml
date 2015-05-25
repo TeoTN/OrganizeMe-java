@@ -19,31 +19,16 @@
             android:layout_width="fill_parent"
             android:id="@+id/categoryList"/>
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
+	    <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="0dp"
-            android:id="@+id/floating_menu"
-            fab:fab_addButtonColorNormal="@color/accent"
-            fab:fab_addButtonColorPressed="@color/accent_light"
-            fab:fab_addButtonPlusIconColor="@android:color/white"
-            fab:fab_addButtonSize="normal"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_title="Category"
-                fab:fab_size="mini"
-                fab:fab_colorPressed="@color/accent_light"
-                android:id="@+id/new_category_btn"
-                />
+            fab:fab_colorNormal="@color/accent"
+            fab:fab_title="Category"
+            fab:fab_size="mini"
+            fab:fab_colorPressed="@color/accent_light"
+            android:id="@+id/new_category_btn"
+			    />
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </RelativeLayout>
 
     <!-- The navigation drawer -->

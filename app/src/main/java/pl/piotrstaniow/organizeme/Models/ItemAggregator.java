@@ -1,4 +1,4 @@
-package pl.piotrstaniow.organizeme;
+package pl.piotrstaniow.organizeme.Models;
 
 import com.android.internal.util.Predicate;
 
