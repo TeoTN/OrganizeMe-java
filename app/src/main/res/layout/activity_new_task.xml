@@ -101,6 +101,20 @@
 				android:layout_below="@id/label_category"
 				/>
 	</RelativeLayout>
+
+
+    <pl.piotrstaniow.organizeme.Models.LabelsCompletionView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Label"
+        android:imeOptions="actionDone"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="19sp"
+        android:nextFocusDown="@+id/editText"
+        android:inputType="text|textNoSuggestions|textMultiLine"
+        android:focusableInTouchMode="true" />
+
 	<com.getbase.floatingactionbutton.FloatingActionButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

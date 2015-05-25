@@ -1,19 +1,28 @@
 package pl.piotrstaniow.organizeme;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
+
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
+import pl.piotrstaniow.organizeme.Models.Label;
+import pl.piotrstaniow.organizeme.Models.LabelsCompletionView;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,14 +30,16 @@ import java.util.List;
 
 public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener{
+        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener, TokenCompleteTextView.TokenListener{
 
+    LabelsCompletionView completionView;
     FloatingActionButton createBtn;
     EditText taskDescET, taskDateET, taskTimeET;
     Spinner categorySpinner;
     Task createdTask;
     boolean isEdit = false;
     ArrayAdapter<Category> adapter;
+    ArrayAdapter<Label> labelAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,10 @@ public class NewTaskActivity extends ActionBarActivity
         setContentView(R.layout.activity_new_task);
         CategoryAggregator ca = CategoryAggregator.getInstance();
         List<Category> allCategories = ca.getAll();
+        List<Label> labels = new ArrayList<>();
+        labels.add(new Label("label1"));
+        labels.add(new Label("label2"));
+        labels.add(new Label("label3"));
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, allCategories);
 
@@ -43,6 +58,36 @@ public class NewTaskActivity extends ActionBarActivity
 
         setVariables();
         manageEdit();
+        setLabelAdapter(labels);
+
+        completionView = (LabelsCompletionView)findViewById(R.id.searchView);
+        completionView.setAdapter(labelAdapter);
+        completionView.setTokenListener(this);
+        completionView.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Delete);
+        completionView.performBestGuess(false);
+    }
+
+    private void setLabelAdapter( List<Label> labels){
+        labelAdapter = new FilteredArrayAdapter<Label>(this, R.layout.suggestion_layout, labels) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+
+                    LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.suggestion_layout, parent, false);
+                }
+
+                Label p = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(p.getName());
+
+                return convertView;
+            }
+            @Override
+            protected boolean keepObject(Label label, String mask) {
+                mask = mask.toLowerCase();
+                return label.getName().toLowerCase().startsWith(mask);
+            }
+        };
     }
 
     @Override
@@ -180,5 +225,15 @@ public class NewTaskActivity extends ActionBarActivity
         cat.setName(unassigned_name);
         cat.setColor(String.valueOf(unassigned_color));
         createdTask.setCategory(cat);
+    }
+
+    @Override
+    public void onTokenAdded(Object o) {
+
+    }
+
+    @Override
+    public void onTokenRemoved(Object o) {
+
     }
 }

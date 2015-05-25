@@ -8,7 +8,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +16,6 @@ import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -122,6 +118,20 @@ public class LocalQueryManager {
         return DatabaseUtils.queryNumEntries(database, "archived_task");
     }
 
+    public void createLabel(String label){
+        ContentValues values = new ContentValues();
+        values.put("name", label);
+        database.insert("label", null, values);
+    }
+
+    public void addLabelToTask(String label, Task task){
+        ContentValues values = new ContentValues();
+        values.put("task_id", task.getID());
+        values.put("label_name", label);
+
+        database.insert("label", null, values);
+    }
+
 	public void createCategory(Category category) {
         ContentValues values = new ContentValues();
         values.put("name", category.getName());
@@ -139,6 +149,37 @@ public class LocalQueryManager {
 	public void removeCategory(Category category){
         database.delete("task", "category_name=\"" + category.getName() + "\"", null);
 		database.delete("category", "name=\"" + category.getName() + "\"", null);
+	}
+
+    public Task getTaskById(long id){
+        SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
+        sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
+        Task task = new Task();
+
+        String[] columns = {"id", "task_name", "deadline", "category_name", "color"};
+        Cursor cursor = sqb.query(database,columns,"id="+id,null,null,null,null);
+        cursor.moveToFirst();
+
+        task.setID(id);
+        task.setTaskDesc(cursor.getString(1));
+
+        String taskDate = cursor.getString(2);
+        boolean isTimeSet = false;
+        if(taskDate != null) {
+            if (taskDate.contains(" "))
+                isTimeSet = true;
+
+            task.setDate(DateTimeUtils.stringToDate(taskDate), isTimeSet);
+        }
+
+        String category = cursor.getString(3);
+        String color = cursor.getString(4);
+        Category cat = new Category();
+        cat.setColor(color);
+        cat.setName(category);
+        task.setCategory(cat);
+        cursor.close();
+        return task;
 	}
 
     public List<Task> getAllTasks(){
@@ -195,5 +236,45 @@ public class LocalQueryManager {
         }
         cursor.close();
         return categoryList;
+    }
+
+    public List<String> getAllLabels(){
+        List<String> labelList = new ArrayList<>();
+        String[] columns = {"name"};
+        Cursor cursor = database.query("label",columns,null,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            labelList.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return labelList;
+    }
+
+    public List<String> getLabelsOfTask(Task task){
+        List<String> labelList = new ArrayList<>();
+        String[] columns = {"label_name"};
+        Cursor cursor = database.query("label",columns,"task_id="+task.getID(),null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            labelList.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return labelList;
+    }
+
+    public List<Task> getTasksByLabel(String label){
+        List<Task> taskList = new ArrayList<>();
+        String[] columns = {"label_name"};
+        Cursor cursor = database.query("label",columns,"label_name="+label,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            long id = cursor.getLong(0);
+            taskList.add(getTaskById(id));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return taskList;
     }
 }

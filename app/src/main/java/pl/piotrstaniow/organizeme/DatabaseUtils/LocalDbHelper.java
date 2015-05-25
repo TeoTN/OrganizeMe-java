@@ -12,7 +12,7 @@ import pl.piotrstaniow.organizeme.R;
  */
 public class LocalDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "OrganizeMeDB";
     private static LocalDbHelper instance = null;
     private Context context;
@@ -58,6 +58,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         database.execSQL(createLabelTable);
         database.execSQL(createTaskLabelTable);
         createArchivedTaskTable(database);
+
     }
 
     private void createMandatoryEntries(SQLiteDatabase database){
@@ -71,7 +72,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
 
     }
     private void dropTables(SQLiteDatabase database){
-        String[] tables = {"task", "category", "label", "task_label"};
+        String[] tables = {"task","archived_task", "category", "label", "task_label"};
         for (String s : tables){
             database.execSQL("DROP TABLE IF EXISTS " + s);
         }
@@ -85,15 +86,15 @@ public class LocalDbHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         createTables(sqLiteDatabase);
         createMandatoryEntries(sqLiteDatabase);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        if(oldVersion == 1){
-            dropTables(sqLiteDatabase);
-            createTables(sqLiteDatabase);
-            createMandatoryEntries(sqLiteDatabase);
-        }
+
+        dropTables(sqLiteDatabase);
+        createTables(sqLiteDatabase);
+        createMandatoryEntries(sqLiteDatabase);
     }
 
     public Context getContext() {
