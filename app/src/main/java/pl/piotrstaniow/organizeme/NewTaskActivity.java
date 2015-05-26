@@ -41,13 +41,16 @@ public class NewTaskActivity extends ActionBarActivity
     boolean isEdit = false;
     ArrayAdapter<Category> adapter;
     ArrayAdapter<Label> labelAdapter;
+    List<Label> task_labels;
+    LabelAggregator la;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
         CategoryAggregator ca = CategoryAggregator.getInstance();
-        LabelAggregator la = LabelAggregator.getInstance();
+        la = LabelAggregator.getInstance();
+        task_labels = new ArrayList<>();
         List<Category> allCategories = ca.getAll();
         List<Label> labels = la.getAll();
         adapter = new ArrayAdapter<>(this,
@@ -192,18 +195,7 @@ public class NewTaskActivity extends ActionBarActivity
         finish();
     }
 
-    private List<Label> getLabelsFromView(){
-        List<Label> labels = new ArrayList<>();
-        LabelAggregator la = LabelAggregator.getInstance();
-        Label l;
-        for (Object token: completionView.getObjects()) {
-            l = (Label) token;
-            labels.add(l);
-            la.add(l);
-        }
-        la.addLabelsToDB();
-        return labels;
-    }
+
 
     @Override
     public void onFocusChange(View view, boolean b) {
@@ -249,6 +241,22 @@ public class NewTaskActivity extends ActionBarActivity
         cat.setName(unassigned_name);
         cat.setColor(String.valueOf(unassigned_color));
         createdTask.setCategory(cat);
+    }
+
+    private List<Label> getLabelsFromView(){
+        List<Label> labels = new ArrayList<>();
+        LabelAggregator la = LabelAggregator.getInstance();
+        Label l;
+        for (Object token: completionView.getObjects()) {
+            l = (Label) token;
+            if(!labels.contains(l)){
+                labels.add(l);
+                labels.add(l);
+                la.add(l);
+            }
+        }
+        la.addLabelsToDB();
+        return labels;
     }
 
     @Override
