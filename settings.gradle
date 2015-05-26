@@ -1,1 +1,1 @@
-include ':app', ':tokenautocomplete-1.3.3'
+include ':app'
