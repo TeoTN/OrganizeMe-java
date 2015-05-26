@@ -98,7 +98,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
         label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
 
         CardView card = (CardView) view.findViewById(R.id.task_card);
-        card.setRadius((float) 0.0);
+        card.setRadius(0);
 
         return view;
     }

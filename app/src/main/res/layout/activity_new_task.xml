@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:fab="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical">
 	<android.support.v7.widget.Toolbar
 			android:layout_width="fill_parent"
-			android:layout_height="100dp"
+			android:layout_height="120dp"
 			android:background="@color/primary"
 			android:padding="10dp"
-			>
+			android:id="@+id/toolbar">
 		<EditText
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -20,6 +20,14 @@
 				style="@style/Base.TextAppearance.AppCompat.Title"
 				android:textColor="@android:color/white"/>
 	</android.support.v7.widget.Toolbar>
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:id="@+id/task_data"
+			android:layout_below="@id/toolbar"
+			android:paddingTop="30dp">
 	<RelativeLayout
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -49,8 +57,9 @@
 				android:layout_marginLeft="4dp"
 				android:layout_below="@id/label_date"
 				android:id="@+id/task_date"
-            android:layout_toLeftOf="@+id/task_time"
-            android:layout_toStartOf="@+id/task_time" />
+				android:layout_toLeftOf="@+id/task_time"
+				android:layout_toStartOf="@+id/task_time"
+				style="@style/Base.TextAppearance.AppCompat.Body2"/>
         <EditText
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -59,7 +68,8 @@
             android:id="@+id/task_time"
             android:layout_alignTop="@+id/task_date"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            style="@style/Base.TextAppearance.AppCompat.Body2"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,21 +109,49 @@
 				android:layout_marginTop="8dp"
 				android:layout_height="wrap_content"
 				android:layout_below="@id/label_category"
+				style="@style/Base.TextAppearance.AppCompat.Body2"
 				/>
 	</RelativeLayout>
 
+		<RelativeLayout
+				android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+				android:padding="16dp">
 
-    <pl.piotrstaniow.organizeme.Models.LabelsCompletionView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Label"
-        android:imeOptions="actionDone"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="19sp"
-        android:nextFocusDown="@+id/editText"
-        android:inputType="text|textNoSuggestions|textMultiLine"
-        android:focusableInTouchMode="true" />
+			<ImageView
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					android:src="@drawable/ic_label"
+					android:layout_alignParentLeft="true"
+					android:layout_marginTop="24dp"
+					android:layout_marginRight="4dp"
+					android:id="@+id/icon_labels"/>
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingLeft="8dp"
+					android:id="@+id/label_labels"
+					android:text="LABELS"
+					android:layout_toRightOf="@id/icon_labels"
+					style="@style/Base.TextAppearance.AppCompat.Caption"/>
+			<pl.piotrstaniow.organizeme.Models.LabelsCompletionView
+					android:id="@+id/searchView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="Label"
+					android:imeOptions="actionDone"
+					android:textColor="@android:color/darker_gray"
+					android:textSize="19sp"
+					android:nextFocusDown="@+id/editText"
+					android:inputType="text|textNoSuggestions|textMultiLine"
+					android:focusableInTouchMode="true"
+					android:layout_below="@id/label_labels"
+					android:layout_toRightOf="@id/icon_labels"
+					style="@style/Base.TextAppearance.AppCompat.Body2"
+					android:paddingLeft="8dp"/>
+		</RelativeLayout>
+
+	</LinearLayout>
 
 	<com.getbase.floatingactionbutton.FloatingActionButton
 			android:layout_width="wrap_content"
@@ -122,9 +160,11 @@
 			fab:fab_size="normal"
 			fab:fab_icon="@drawable/ic_done"
 			android:id="@+id/create_new_task"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentBottom="true"
 			android:layout_marginRight="16dp"
-			android:layout_marginBottom="0dp"
-        android:layout_gravity="right" />
-</LinearLayout>
+			android:layout_below="@id/toolbar"
+			android:layout_alignParentRight="true"
+			android:layout_alignTop="@id/task_data"
+			android:layout_marginTop="-32dp"
+			android:translationZ="5dp"
+			/>
+</RelativeLayout>
