@@ -8,11 +8,6 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_notifications"
-        android:title="@string/action_notifications"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
