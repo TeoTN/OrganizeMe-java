@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import pl.piotrstaniow.organizeme.Models.Category;
+import pl.piotrstaniow.organizeme.Models.Label;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
@@ -60,7 +61,10 @@ public class LocalQueryManager {
     }
 
     public long createTask(Task task){
-        return database.insert("task", null, getContentValues(task));
+        long id =  database.insert("task", null, getContentValues(task));
+        task.setID(id);
+        addLabelsOfTask(task);
+        return id;
     }
 
     private ContentValues getContentValues(Task task) {
@@ -99,6 +103,7 @@ public class LocalQueryManager {
         if(task.isDateSet())
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
         values.put("category_name", task.getCategory().getName());
+        addLabelsOfTask(task);
         database.update("task", values, "id="+task.getID(), null);
     }
 
@@ -124,12 +129,14 @@ public class LocalQueryManager {
         database.insert("label", null, values);
     }
 
-    public void addLabelToTask(String label, Task task){
-        ContentValues values = new ContentValues();
-        values.put("task_id", task.getID());
-        values.put("label_name", label);
-
-        database.insert("label", null, values);
+    public void addLabelsOfTask(Task task){
+        database.delete("task_label","task_id="+task.getID(),null);
+        for(Label label: task.getLabels()) {
+            ContentValues values = new ContentValues();
+            values.put("task_id", task.getID());
+            values.put("label_name", label.getName());
+            database.insert("task_label", null, values);
+        }
     }
 
 	public void createCategory(Category category) {
@@ -211,6 +218,10 @@ public class LocalQueryManager {
             }
             task.setTaskDesc(taskDesc);
             task.setID(id);
+
+            List<Label> labels = getLabelsOfTask(task);
+            task.setLabels(labels);
+
             taskList.add(task);
 
             cursor.moveToNext();
@@ -238,26 +249,26 @@ public class LocalQueryManager {
         return categoryList;
     }
 
-    public List<String> getAllLabels(){
-        List<String> labelList = new ArrayList<>();
+    public List<Label> getAllLabels(){
+        List<Label> labelList = new ArrayList<>();
         String[] columns = {"name"};
         Cursor cursor = database.query("label",columns,null,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            labelList.add(cursor.getString(0));
+            labelList.add(new Label(cursor.getString(0)));
             cursor.moveToNext();
         }
         cursor.close();
         return labelList;
     }
 
-    public List<String> getLabelsOfTask(Task task){
-        List<String> labelList = new ArrayList<>();
+    public List<Label> getLabelsOfTask(Task task){
+        List<Label> labelList = new ArrayList<>();
         String[] columns = {"label_name"};
-        Cursor cursor = database.query("label",columns,"task_id="+task.getID(),null,null,null,null);
+        Cursor cursor = database.query("task_label",columns,"task_id="+task.getID(),null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            labelList.add(cursor.getString(0));
+            labelList.add(new Label(cursor.getString(0)));
             cursor.moveToNext();
         }
         cursor.close();
@@ -267,7 +278,7 @@ public class LocalQueryManager {
     public List<Task> getTasksByLabel(String label){
         List<Task> taskList = new ArrayList<>();
         String[] columns = {"label_name"};
-        Cursor cursor = database.query("label",columns,"label_name="+label,null,null,null,null);
+        Cursor cursor = database.query("task_label",columns,"label_name="+label,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
             long id = cursor.getLong(0);

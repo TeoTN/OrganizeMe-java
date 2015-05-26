@@ -24,7 +24,7 @@ public class Task {
     private boolean isDateSet = false;
     private boolean isTimeSet = false;
     private String predicate;
-    private List<String> labels;
+    private List<Label> labels;
 
     public Task() {
         date = new Date();
@@ -47,6 +47,13 @@ public class Task {
         task.setDate(date, isTimeSet);
         Category cat = CategoryAggregator.getInstance().getByName(splitted[3]);
         task.setCategory(cat);
+        if(splitted.length > 4){
+            String[] labels = splitted[4].split(",");
+            List<Label> labels_list = new ArrayList<>();
+            for(String l: labels)
+                labels_list.add(new Label(l));
+            task.setLabels(labels_list);
+        }
 
         return task;
     }
@@ -122,10 +129,21 @@ public class Task {
     public String serialize(){
         String str = taskDesc;
         str +="/" + myID + "/" + DateTimeUtils.dateToString(date, isTimeSet)+"/"+category.getName();
+        if(!labels.isEmpty()){
+            str += "/";
+            for(Label l: labels){
+                str+= l.getName() + ',';
+            }
+            str=str.substring(0,str.length()-1);
+        }
         return str;
     }
 
-    public void setLabels(List<String> labels) {
+    public void setLabels(List<Label> labels) {
         this.labels = labels;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
     }
 }

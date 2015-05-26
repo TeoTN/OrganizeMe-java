@@ -2,14 +2,16 @@ package pl.piotrstaniow.organizeme.Models;
 
 import com.android.internal.util.Predicate;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 
 /**
  * Created by oszka on 26.05.15.
  */
 public class LabelAggregator implements ItemAggregator<Label> {
     private List<Label> labelList;
+    LocalQueryManager localQueryManager;
 
     private static LabelAggregator ourInstance = new LabelAggregator();
 
@@ -18,7 +20,10 @@ public class LabelAggregator implements ItemAggregator<Label> {
     }
 
     private LabelAggregator() {
-        labelList = new ArrayList<>();
+        localQueryManager = LocalQueryManager.getInstance();
+        localQueryManager.openWritable();
+        labelList = localQueryManager.getAllLabels();
+        localQueryManager.close();
     }
 
     @Override
@@ -26,11 +31,24 @@ public class LabelAggregator implements ItemAggregator<Label> {
         if(!labelList.contains(newLabel)){
             labelList.add(newLabel);
         }
+
+    }
+
+    public void addLabelsToDB(){
+        localQueryManager.openWritable();
+        List<Label> alreadyInDB = localQueryManager.getAllLabels();
+        for(Label l: labelList){
+            if(!alreadyInDB.contains(l))
+                localQueryManager.createLabel(l.getName());
+        }
+        localQueryManager.close();
     }
 
     @Override
-    public void remove(Label task) {
-
+    public void remove(Label label) {
+        if(labelList.contains(label)){
+            labelList.remove(label);
+        }
     }
 
     @Override
@@ -40,12 +58,12 @@ public class LabelAggregator implements ItemAggregator<Label> {
 
     @Override
     public int getSize() {
-        return 0;
+        return labelList.size();
     }
 
     @Override
     public Label getItem(int i) {
-        return null;
+        return labelList.get(i);
     }
 
     @Override

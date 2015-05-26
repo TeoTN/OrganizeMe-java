@@ -50,9 +50,6 @@ public class NewTaskActivity extends ActionBarActivity
         LabelAggregator la = LabelAggregator.getInstance();
         List<Category> allCategories = ca.getAll();
         List<Label> labels = la.getAll();
-        labels.add(new Label("label1"));
-        labels.add(new Label("label2"));
-        labels.add(new Label("label3"));
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, allCategories);
 
@@ -62,7 +59,6 @@ public class NewTaskActivity extends ActionBarActivity
         manageEdit();
         setLabelAdapter(labels);
 
-        completionView = (LabelsCompletionView)findViewById(R.id.searchView);
         completionView.setAdapter(labelAdapter);
         completionView.setTokenListener(this);
         completionView.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Delete);
@@ -126,6 +122,12 @@ public class NewTaskActivity extends ActionBarActivity
         if (createdTask.isTimeSet())
             taskTimeET.setText(spl[3]);
 
+        List<Label> temp_labels = createdTask.getLabels();
+        if(!temp_labels.isEmpty()){
+            for(Label l: temp_labels){
+                completionView.addObject(l);
+            }
+        }
 
         int selectedCat = adapter.getPosition(createdTask.getCategory());
         categorySpinner.setSelection(selectedCat);
@@ -154,6 +156,8 @@ public class NewTaskActivity extends ActionBarActivity
 
         taskTimeET.setOnClickListener(this);
         taskTimeET.setOnFocusChangeListener(this);
+
+        completionView = (LabelsCompletionView)findViewById(R.id.searchView);
         manageCategorySpinner();
     }
 
@@ -188,13 +192,16 @@ public class NewTaskActivity extends ActionBarActivity
         finish();
     }
 
-    private List<String> getLabelsFromView(){
-        List<String> labels = new ArrayList<>();
+    private List<Label> getLabelsFromView(){
+        List<Label> labels = new ArrayList<>();
         LabelAggregator la = LabelAggregator.getInstance();
+        Label l;
         for (Object token: completionView.getObjects()) {
-            labels.add(token.toString());
-            la.add(new Label(token.toString()));
+            l = (Label) token;
+            labels.add(l);
+            la.add(l);
         }
+        la.addLabelsToDB();
         return labels;
     }
 
