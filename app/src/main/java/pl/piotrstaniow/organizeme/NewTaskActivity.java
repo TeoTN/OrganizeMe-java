@@ -17,6 +17,7 @@ import com.tokenautocomplete.TokenCompleteTextView;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Label;
+import pl.piotrstaniow.organizeme.Models.LabelAggregator;
 import pl.piotrstaniow.organizeme.Models.LabelsCompletionView;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
@@ -46,8 +47,9 @@ public class NewTaskActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
         CategoryAggregator ca = CategoryAggregator.getInstance();
+        LabelAggregator la = LabelAggregator.getInstance();
         List<Category> allCategories = ca.getAll();
-        List<Label> labels = new ArrayList<>();
+        List<Label> labels = la.getAll();
         labels.add(new Label("label1"));
         labels.add(new Label("label2"));
         labels.add(new Label("label3"));
@@ -65,6 +67,7 @@ public class NewTaskActivity extends ActionBarActivity
         completionView.setTokenListener(this);
         completionView.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Delete);
         completionView.performBestGuess(false);
+        completionView.allowDuplicates(false);
     }
 
     private void setLabelAdapter( List<Label> labels){
@@ -171,16 +174,30 @@ public class NewTaskActivity extends ActionBarActivity
     private void editTask() {
         String taskDesc = String.valueOf(taskDescET.getText());
         createdTask.setTaskDesc(taskDesc);
+        createdTask.setLabels(getLabelsFromView());
         TaskAggregator.getInstance().edit(createdTask);
         finish();
     }
 
     private void createNewTask() {
+
         String taskDesc = String.valueOf(taskDescET.getText());
         createdTask.setTaskDesc(taskDesc);
+        createdTask.setLabels(getLabelsFromView());
         TaskAggregator.getInstance().add(createdTask);
         finish();
     }
+
+    private List<String> getLabelsFromView(){
+        List<String> labels = new ArrayList<>();
+        LabelAggregator la = LabelAggregator.getInstance();
+        for (Object token: completionView.getObjects()) {
+            labels.add(token.toString());
+            la.add(new Label(token.toString()));
+        }
+        return labels;
+    }
+
     @Override
     public void onFocusChange(View view, boolean b) {
         if (view == taskDateET && b) {
@@ -228,7 +245,7 @@ public class NewTaskActivity extends ActionBarActivity
     }
 
     @Override
-    public void onTokenAdded(Object o) {
+    public void onTokenAdded(Object token) {
 
     }
 

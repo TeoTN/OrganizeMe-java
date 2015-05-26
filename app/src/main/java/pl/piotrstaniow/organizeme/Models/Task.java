@@ -2,7 +2,9 @@ package pl.piotrstaniow.organizeme.Models;
 
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * OrganizeMe
@@ -22,10 +24,12 @@ public class Task {
     private boolean isDateSet = false;
     private boolean isTimeSet = false;
     private String predicate;
+    private List<String> labels;
 
     public Task() {
         date = new Date();
         isFirstInGroup = false;
+        labels = new ArrayList<>();
     }
 
     public static Task deserializeTask(String str) {
@@ -119,5 +123,9 @@ public class Task {
         String str = taskDesc;
         str +="/" + myID + "/" + DateTimeUtils.dateToString(date, isTimeSet)+"/"+category.getName();
         return str;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
     }
 }
