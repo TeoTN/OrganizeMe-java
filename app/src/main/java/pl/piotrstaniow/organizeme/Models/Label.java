@@ -13,4 +13,10 @@ public class Label implements Serializable {
 
     @Override
     public String toString() { return name; }
+
+
+    public boolean equals(Object other){
+        Label l = (Label) other;
+        return name.equals(l.getName());
+    }
 }

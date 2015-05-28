@@ -131,11 +131,16 @@ public class LocalQueryManager {
 
     public void addLabelsOfTask(Task task){
         database.delete("task_label","task_id="+task.getID(),null);
+        List<Label> alreadyInDB = new ArrayList<>();
         for(Label label: task.getLabels()) {
-            ContentValues values = new ContentValues();
-            values.put("task_id", task.getID());
-            values.put("label_name", label.getName());
-            database.insert("task_label", null, values);
+            if(!alreadyInDB.contains(label)){
+                alreadyInDB.add(label);
+                ContentValues values = new ContentValues();
+                values.put("task_id", task.getID());
+                values.put("label_name", label.getName());
+                database.insert("task_label", null, values);
+            }
+
         }
     }
 

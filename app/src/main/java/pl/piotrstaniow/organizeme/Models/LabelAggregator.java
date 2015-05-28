@@ -38,8 +38,10 @@ public class LabelAggregator implements ItemAggregator<Label> {
         localQueryManager.openWritable();
         List<Label> alreadyInDB = localQueryManager.getAllLabels();
         for(Label l: labelList){
-            if(!alreadyInDB.contains(l))
+            if(!alreadyInDB.contains(l)) {
                 localQueryManager.createLabel(l.getName());
+                alreadyInDB.add(l);
+            }
         }
         localQueryManager.close();
     }
