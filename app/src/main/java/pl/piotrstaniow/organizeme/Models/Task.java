@@ -28,6 +28,8 @@ public class Task {
     private String predicate;
     private List<Label> labels;
     private LatLng location;
+    private int locationPrecision;
+    private boolean locationNotify;
 
     public Task() {
         date = new Date();
@@ -156,5 +158,21 @@ public class Task {
 
     public LatLng getLocation() {
         return location;
+    }
+
+    public void setLocationPrecision(int locationPrecision) {
+        this.locationPrecision = locationPrecision;
+    }
+
+    public int getLocationPrecision() {
+        return locationPrecision;
+    }
+
+    public void setLocationNotify(boolean locationNotify) {
+        this.locationNotify = locationNotify;
+    }
+
+    public boolean isLocationNotify() {
+        return locationNotify;
     }
 }
