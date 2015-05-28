@@ -42,7 +42,7 @@ public class Category {
         this.id = id;
     }
 
-    public boolean equals(Category other) {
+    public boolean equals(Object other) {
         return other.toString().equals(name);
     }
 }

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.larswerkman.holocolorpicker.ColorPicker;
@@ -56,6 +57,10 @@ public class EditCategoryActivity extends ActionBarActivity implements View.OnCl
     @Override
     public void onClick(View view) {
         if (view == saveBtn) {
+            if(categoryName.getText().toString().matches("")) {
+                Toast.makeText(this, "Enter description", Toast.LENGTH_SHORT).show();
+                return;
+            }
             save();
         }
     }

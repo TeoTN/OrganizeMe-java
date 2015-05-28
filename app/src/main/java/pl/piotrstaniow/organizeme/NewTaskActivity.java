@@ -97,9 +97,15 @@ public class NewTaskActivity extends ActionBarActivity
     @Override
     public void onClick(View view) {
         if (view == createBtn && !isEdit) {
+            if(isNameEmpty()){
+                return;
+            }
             createNewTask();
         }
         if (view == createBtn && isEdit) {
+            if(isNameEmpty()){
+                return;
+            }
             editTask();
         }
         if (view == taskDateET) {
@@ -112,6 +118,15 @@ public class NewTaskActivity extends ActionBarActivity
             setLocation();
         }
     }
+
+    private boolean isNameEmpty() {
+        if(taskDescET.getText().toString().matches("")) {
+            Toast.makeText(this,"Enter description", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
     private void manageEdit(){
         Intent i = getIntent();
         if(!i.hasExtra("task"))

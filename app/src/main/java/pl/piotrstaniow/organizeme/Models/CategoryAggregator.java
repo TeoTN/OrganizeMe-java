@@ -48,6 +48,9 @@ public class CategoryAggregator implements ItemAggregator<Category> {
 
     @Override
     public void add(Category item) {
+        if(categoryList.contains(item)){
+            return;
+        }
         localQueryManager.openWritable();
         localQueryManager.createCategory(item);
         localQueryManager.close();
@@ -66,6 +69,13 @@ public class CategoryAggregator implements ItemAggregator<Category> {
 
     @Override
     public void update(Category item) {
+        if(categoryList.contains(item)){
+            int i = categoryList.indexOf(item);
+            Category cat = categoryList.get(i);
+            if(cat.getId() != item.getId())
+                return;
+        }
+
         localQueryManager.openWritable();
         localQueryManager.editCategory(item);
         localQueryManager.close();
