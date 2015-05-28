@@ -1,5 +1,7 @@
 package pl.piotrstaniow.organizeme.Models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class Task {
     private boolean isTimeSet = false;
     private String predicate;
     private List<Label> labels;
+    private LatLng location;
 
     public Task() {
         date = new Date();
@@ -145,5 +148,13 @@ public class Task {
 
     public List<Label> getLabels() {
         return labels;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
+    }
+
+    public LatLng getLocation() {
+        return location;
     }
 }

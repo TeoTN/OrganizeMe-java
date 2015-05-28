@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.maps.model.LatLng;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -33,9 +34,10 @@ public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener, TokenCompleteTextView.TokenListener{
 
+    public static final int GET_LOCATION_REQUEST_CODE = 1;
     LabelsCompletionView completionView;
     FloatingActionButton createBtn;
-    EditText taskDescET, taskDateET, taskTimeET;
+    EditText taskDescET, taskDateET, taskTimeET, taskLocationET;
     Spinner categorySpinner;
     Task createdTask;
     boolean isEdit = false;
@@ -95,9 +97,15 @@ public class NewTaskActivity extends ActionBarActivity
     @Override
     public void onClick(View view) {
         if (view == createBtn && !isEdit) {
+            if(isNameEmpty()){
+                return;
+            }
             createNewTask();
         }
         if (view == createBtn && isEdit) {
+            if(isNameEmpty()){
+                return;
+            }
             editTask();
         }
         if (view == taskDateET) {
@@ -106,8 +114,19 @@ public class NewTaskActivity extends ActionBarActivity
         if (view == taskTimeET){
             pickTime();
         }
-
+        if (view == taskLocationET) {
+            setLocation();
+        }
     }
+
+    private boolean isNameEmpty() {
+        if(taskDescET.getText().toString().matches("")) {
+            Toast.makeText(this,"Enter description", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
     private void manageEdit(){
         Intent i = getIntent();
         if(!i.hasExtra("task"))
@@ -151,6 +170,7 @@ public class NewTaskActivity extends ActionBarActivity
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
         taskTimeET = (EditText) findViewById(R.id.task_time);
+        taskLocationET = (EditText) findViewById(R.id.task_location);
 
         categorySpinner = (Spinner) findViewById(R.id.category);
 
@@ -159,6 +179,9 @@ public class NewTaskActivity extends ActionBarActivity
 
         taskTimeET.setOnClickListener(this);
         taskTimeET.setOnFocusChangeListener(this);
+
+        taskLocationET.setOnClickListener(this);
+        taskLocationET.setOnFocusChangeListener(this);
 
         completionView = (LabelsCompletionView)findViewById(R.id.searchView);
         manageCategorySpinner();
@@ -220,7 +243,7 @@ public class NewTaskActivity extends ActionBarActivity
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int min) {
         Date date = createdTask.getDate();
-        date = DateTimeUtils.setTimeInDate(date,hour,min);
+        date = DateTimeUtils.setTimeInDate(date, hour, min);
         createdTask.setDate(date, true);
         String displayDate = createdTask.getDisplayDate();
         String[] splitted = displayDate.split(" ");
@@ -267,5 +290,21 @@ public class NewTaskActivity extends ActionBarActivity
     @Override
     public void onTokenRemoved(Object o) {
 
+    }
+
+    private void setLocation() {
+        Intent getLocationIntent = new Intent(this, MapsActivity.class);
+        startActivityForResult(getLocationIntent, GET_LOCATION_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GET_LOCATION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getExtras();
+                createdTask.setLocation((LatLng) bundle.getParcelable("location"));
+                taskLocationET.setText(createdTask.getLocation().latitude + ", " + createdTask.getLocation().longitude);
+            }
+        }
     }
 }
