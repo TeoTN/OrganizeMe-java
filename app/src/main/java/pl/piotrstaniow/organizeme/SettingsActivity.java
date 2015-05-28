@@ -97,7 +97,7 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
         editor.putBoolean(DAILY_NOTIFICATIONS_SET, dailyNotificationsSet);
         editor.putInt(DAILY_NOTIFICATIONS_HOUR, dailyNotificationsHour);
         editor.putInt(DAILY_NOTIFICATIONS_MINUTE, dailyNotificationsMinute);
-        editor.commit();
+        editor.apply();
         finish();
     }
 

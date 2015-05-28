@@ -150,6 +150,39 @@
 					style="@style/Base.TextAppearance.AppCompat.Body2"
 					android:paddingLeft="8dp"/>
 		</RelativeLayout>
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:padding="16dp">
+
+			<ImageView
+				android:layout_width="20dp"
+				android:layout_height="20dp"
+				android:src="@drawable/ic_more"
+				android:layout_alignParentLeft="true"
+				android:layout_marginTop="24dp"
+				android:layout_marginRight="4dp"
+				android:id="@+id/icon_location"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="8dp"
+				android:id="@+id/label_location"
+				android:text="LOCATION"
+				android:layout_toRightOf="@id/icon_location"
+				style="@style/Base.TextAppearance.AppCompat.Caption"/>
+			<EditText
+				android:id="@+id/task_location"
+				android:editable="false"
+				android:focusable="true"
+				android:layout_toRightOf="@id/icon_location"
+				android:layout_width="match_parent"
+				android:layout_marginTop="8dp"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/label_location"
+				style="@style/Base.TextAppearance.AppCompat.Body2"
+				/>
+		</RelativeLayout>
 
 	</LinearLayout>
 
