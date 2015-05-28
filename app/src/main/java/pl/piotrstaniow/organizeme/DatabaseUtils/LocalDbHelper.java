@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
 
 import pl.piotrstaniow.organizeme.R;
 
@@ -110,5 +111,13 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "done TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
         sqLiteDatabase.execSQL(createArchivedTaskTable);
+    }
+
+    private void createNotificationTable(SQLiteDatabase sqLiteDatabase){
+        String createNotificationTable = "CREATE TABLE IF NOT EXISTS notification (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "task_id INTEGER, " +
+                "relative_time TEXT"  +
+                "FOREIGN KEY(task_id) REFERENCES task(id))";
     }
 }
