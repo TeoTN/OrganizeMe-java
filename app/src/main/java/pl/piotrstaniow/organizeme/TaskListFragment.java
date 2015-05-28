@@ -18,13 +18,16 @@ import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.AbstractTaskGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateGroupProvider;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.QueryGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
 
 public class TaskListFragment extends Fragment implements View.OnClickListener, ExpandableListView.OnChildClickListener {
     public static final int GROUP_BY_DATE = 13;
     public static final int GROUP_BY_CATEGORY = 14;
+    public static final int GROUP_BY_QUERY = 15;
     private static final String GROUP_METHOD = "GroupingMethodParameter";
+    private static final String SEARCH_QUERY = "search_query";
     private int groupingMethod;
 
     private AbstractTaskGroupProvider manager;
@@ -32,6 +35,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
     private FloatingActionButton newTaskBtn, newCatBtn;
     private FloatingActionsMenu floatingMenu;
     private ExpandableListView taskList;
+    private String query;
 
     public TaskListFragment() {
 
@@ -41,6 +45,14 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
         TaskListFragment fragment = new TaskListFragment();
         Bundle args = new Bundle();
         args.putInt(GROUP_METHOD, method);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public static TaskListFragment newInstance(int method, String query){
+        TaskListFragment fragment = new TaskListFragment();
+        Bundle args = new Bundle();
+        args.putInt(GROUP_METHOD, method);
+        args.putString(SEARCH_QUERY, query);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +69,10 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                 break;
             case GROUP_BY_CATEGORY:
                 manager = new CategoryGroupProvider();
+                break;
+            case GROUP_BY_QUERY:
+                query = getArguments().getString(SEARCH_QUERY);
+                manager = new QueryGroupProvider(query);
                 break;
             default:
                 manager = new DateGroupProvider();

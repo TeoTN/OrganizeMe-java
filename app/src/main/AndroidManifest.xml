@@ -12,7 +12,6 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,18 +34,18 @@
         <activity
             android:name=".EditCategoryActivity"
             android:label="Edit category"
-            android:parentActivityName=".TasksActivity">
+            android:parentActivityName=".TasksActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TasksActivity"/>
+                android:value=".TasksActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".TasksActivity">
+            android:parentActivityName=".TasksActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TasksActivity"/>
+                android:value=".TasksActivity" />
         </activity>
     </application>
 

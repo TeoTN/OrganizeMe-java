@@ -1,19 +1,26 @@
 package pl.piotrstaniow.organizeme;
 
+
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
 
@@ -21,7 +28,7 @@ import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
 
 
-public class TasksActivity extends ActionBarActivity {
+public class TasksActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
     private String[] drawerOptions;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -94,7 +101,17 @@ public class TasksActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tasks, menu);
-        return true;
+
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView( menu.findItem(R.id.action_search));
+
+
+        searchView.setOnQueryTextListener(this);
+
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -133,5 +150,21 @@ public class TasksActivity extends ActionBarActivity {
                     .putBoolean("isFirstRun", false)
                     .apply();
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        Fragment fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_QUERY,s);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack("searchResult")
+                .commit();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 }

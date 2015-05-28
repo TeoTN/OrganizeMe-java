@@ -29,4 +29,5 @@
 	<string name="drawer_close">Close menu</string>
     <string name="task_done">Done</string>
     <string name="done_tasks_title">Done tasks</string>
+    <string name="title_activity_search_results">Search Results</string>
 </resources>
