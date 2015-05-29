@@ -115,6 +115,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
         } else if (view == newCatBtn) {
             createNewCategoryActivity();
             floatingMenu.collapse();
+            taskListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -143,7 +144,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
                             Intent intent = new Intent(getActivity(), NewTaskActivity.class);
-                            intent.putExtra("task", task.serialize());
+                            intent.putExtra("task", task);
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {

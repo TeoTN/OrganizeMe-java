@@ -1,13 +1,19 @@
 package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import pl.piotrstaniow.organizeme.EditCategoryActivity;
+import pl.piotrstaniow.organizeme.Models.Category;
+import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
+import pl.piotrstaniow.organizeme.SettingsActivity;
 
 import java.util.List;
 
@@ -63,7 +69,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
 
     @Override
     public View getGroupView(int groupPosition, boolean expanded, View view, ViewGroup viewGroup) {
-        String title = categoryMgr.getGroupName(groupPosition);
+        final String title = categoryMgr.getGroupName(groupPosition);
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) ctx
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -73,20 +79,36 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
         CardView card = (CardView) view.findViewById(R.id.category_card);
         ImageButton edBtn = (ImageButton) view.findViewById(R.id.category_edit);
         ImageButton rmBtn = (ImageButton) view.findViewById(R.id.category_delete);
-        edBtn.setFocusable(false);
-        rmBtn.setFocusable(false);
-        edBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ctx, "EDIT", Toast.LENGTH_SHORT).show();
-            }
-        });
-        rmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ctx, "REMOVE", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        if (!(categoryMgr instanceof CategoryGroupProvider)) {
+            //|| title.equals(ctx.getResources().getString(R.string.unassigned_category_name))
+            edBtn.setVisibility(View.GONE);
+            rmBtn.setVisibility(View.GONE);
+        }
+        else {
+            edBtn.setFocusable(false);
+            rmBtn.setFocusable(false);
+            edBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, EditCategoryActivity.class);
+                    CategoryAggregator ca = CategoryAggregator.getInstance();
+                    Category cat = ca.getByName(title);
+                    i.putExtra("id", cat.getId());
+                    i.putExtra("name", cat.getName());
+                    i.putExtra("color", cat.getColor());
+                    ctx.startActivity(i);
+                }
+            });
+            rmBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CategoryAggregator ca = CategoryAggregator.getInstance();
+                    Category cat = ca.getByName(title);
+                    ca.remove(cat);
+                }
+            });
+        }
         card.setRadius((float) 0.0);
         item.setText(title);
         return view;
@@ -108,7 +130,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
 
         text1.setText(task.getTaskDesc());
         text2.setText(task.getDisplayDate());
-        //TODO check if color is empty
+
         label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
 
         CardView card = (CardView) view.findViewById(R.id.task_card);
