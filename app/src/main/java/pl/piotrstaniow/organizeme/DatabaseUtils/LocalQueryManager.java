@@ -7,17 +7,16 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Label;
 import pl.piotrstaniow.organizeme.Models.NotificationItem;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
@@ -283,13 +282,13 @@ public class LocalQueryManager {
 
     public long createNotification(NotificationItem ni){
         ContentValues values = new ContentValues();
-        values.put("task_id", ni.getTaskId());
+        values.put("task_id", ni.getTaskID());
         values.put("type", ni.getType());
         return database.insert("notification", null, values);
     }
 
     public void removeNotification(NotificationItem ni){
-        database.delete("notification","id="+ni.getTaskId(),null);
+        database.delete("notification", "id=" + ni.getTaskID(), null);
     }
 
     public List<NotificationItem> getAllNotifications(){

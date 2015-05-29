@@ -15,10 +15,6 @@ public class NotificationItem {
         this.notif_id = notif_id;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public long getTaskID() {
         return task_id;
     }
@@ -27,11 +23,11 @@ public class NotificationItem {
         this.task_id = task_id;
     }
 
-    public long getTaskId() {
-        return task_id;
-    }
-
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
