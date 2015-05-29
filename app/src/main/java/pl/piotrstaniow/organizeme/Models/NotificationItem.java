@@ -26,4 +26,12 @@ public class NotificationItem {
     public void setTaskID(long task_id) {
         this.task_id = task_id;
     }
+
+    public long getTaskId() {
+        return task_id;
+    }
+
+    public String getType() {
+        return type;
+    }
 }
