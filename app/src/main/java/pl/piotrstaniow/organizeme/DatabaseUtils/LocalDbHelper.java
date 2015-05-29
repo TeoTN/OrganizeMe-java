@@ -13,7 +13,7 @@ import pl.piotrstaniow.organizeme.R;
  */
 public class LocalDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "OrganizeMeDB";
     private static LocalDbHelper instance = null;
     private Context context;
@@ -59,6 +59,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         database.execSQL(createLabelTable);
         database.execSQL(createTaskLabelTable);
         createArchivedTaskTable(database);
+        createNotificationTable(database);
 
     }
 
@@ -92,10 +93,13 @@ public class LocalDbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-
-        dropTables(sqLiteDatabase);
-        createTables(sqLiteDatabase);
-        createMandatoryEntries(sqLiteDatabase);
+        if(oldVersion < 3) {
+            dropTables(sqLiteDatabase);
+            createTables(sqLiteDatabase);
+            createMandatoryEntries(sqLiteDatabase);
+        } else {
+            createNotificationTable(sqLiteDatabase);
+        }
     }
 
     public Context getContext() {
@@ -117,7 +121,8 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         String createNotificationTable = "CREATE TABLE IF NOT EXISTS notification (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "task_id INTEGER, " +
-                "relative_time TEXT"  +
+                "type TEXT, "  +
                 "FOREIGN KEY(task_id) REFERENCES task(id))";
+        sqLiteDatabase.execSQL(createNotificationTable);
     }
 }
