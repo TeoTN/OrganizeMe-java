@@ -6,14 +6,15 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import pl.piotrstaniow.organizeme.EditCategoryActivity;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
-import pl.piotrstaniow.organizeme.SettingsActivity;
 
 import java.util.List;
 
@@ -80,8 +81,9 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
         ImageButton edBtn = (ImageButton) view.findViewById(R.id.category_edit);
         ImageButton rmBtn = (ImageButton) view.findViewById(R.id.category_delete);
 
-        if (!(categoryMgr instanceof CategoryGroupProvider)) {
-            //|| title.equals(ctx.getResources().getString(R.string.unassigned_category_name))
+        if (!(categoryMgr instanceof CategoryGroupProvider)
+                || title.equals(ctx.getResources().getString(R.string.unassigned_category_name))) {
+            //
             edBtn.setVisibility(View.GONE);
             rmBtn.setVisibility(View.GONE);
         }
@@ -98,6 +100,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
                     i.putExtra("name", cat.getName());
                     i.putExtra("color", cat.getColor());
                     ctx.startActivity(i);
+                    refresh();
                 }
             });
             rmBtn.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +109,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
                     CategoryAggregator ca = CategoryAggregator.getInstance();
                     Category cat = ca.getByName(title);
                     ca.remove(cat);
+                    refresh();
                 }
             });
         }
@@ -145,6 +149,9 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
     }
 
     public void refresh() {
+        if (categoryMgr instanceof CategoryGroupProvider) {
+            ((CategoryGroupProvider) categoryMgr).refresh();
+        }
         notifyDataSetChanged();
     }
 

@@ -11,12 +11,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TimePicker;
-
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.Date;
-
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 
 public class SettingsActivity extends ActionBarActivity implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener{
@@ -104,7 +102,7 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public void onFocusChange(View view, boolean b) {
         if (view == dailyNotifTimeET && b) {
-            pickTime();
+            //pickTime();
         }
     }
 

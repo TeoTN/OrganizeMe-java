@@ -5,6 +5,8 @@ import pl.piotrstaniow.organizeme.CategoryPredicates.CategoryPredicateFactory;
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
 
+import java.util.ArrayList;
+
 public class CategoryGroupProvider extends AbstractTaskGroupProvider {
     private CategoryAggregator categoryAggregator;
     private CategoryPredicateFactory predicateFactory;
@@ -13,6 +15,11 @@ public class CategoryGroupProvider extends AbstractTaskGroupProvider {
         super();
         categoryAggregator = CategoryAggregator.getInstance();
         predicateFactory = CategoryPredicateFactory.getInstance();
+        addPredicates();
+    }
+
+    public void refresh() {
+        predicateList = new ArrayList<>();
         addPredicates();
     }
 

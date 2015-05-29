@@ -23,15 +23,11 @@
             android:background="@color/primary"
             android:id="@+id/drawer_toolbar">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Good list is a key to success!"
-                />
-            <TextView
                 android:id="@+id/done_tasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/done_tasks_title"
+                android:textColor="@color/primary_light"
                 />
 	    </android.support.v7.widget.Toolbar>
         <ListView

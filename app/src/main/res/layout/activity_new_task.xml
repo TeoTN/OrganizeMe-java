@@ -29,8 +29,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				android:id="@+id/task_data"
-				android:layout_below="@id/toolbar"
 				android:paddingTop="30dp">
 			<RelativeLayout
 					android:layout_width="fill_parent"

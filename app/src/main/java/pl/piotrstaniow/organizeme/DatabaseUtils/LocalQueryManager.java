@@ -7,13 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Label;
 import pl.piotrstaniow.organizeme.Models.NotificationItem;
@@ -319,7 +313,7 @@ public class LocalQueryManager {
         List<NotificationItem> notificationItems = new ArrayList<>();
         String[] columns = {"id", "task_id", "type"};
         NotificationItem ni;
-        Cursor cursor = database.query("notifications",columns,null,null,null,null,null);
+        Cursor cursor = database.query("notification", columns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             ni = new NotificationItem();

@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQuery;
-
 import pl.piotrstaniow.organizeme.R;
 
 /**
@@ -13,10 +11,14 @@ import pl.piotrstaniow.organizeme.R;
  */
 public class LocalDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "OrganizeMeDB";
     private static LocalDbHelper instance = null;
     private Context context;
+
+    public LocalDbHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
     public static LocalDbHelper createInstance(Context context){
         if (instance == null) {
@@ -82,15 +84,12 @@ public class LocalDbHelper extends SQLiteOpenHelper{
             database.insert("label", null, values);
         }
     }
+
     private void dropTables(SQLiteDatabase database){
         String[] tables = {"notification","task","archived_task", "category", "label", "task_label"};
         for (String s : tables){
             database.execSQL("DROP TABLE IF EXISTS " + s);
         }
-    }
-
-    public LocalDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

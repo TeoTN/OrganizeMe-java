@@ -21,13 +21,9 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
-import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
-
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
+import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
 
 
 public class TasksActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
@@ -76,11 +72,13 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         drawerToggle.syncState();
     }
 
-    private void refreshArchivedTaskInfo() {
+    public void refreshArchivedTaskInfo() {
         LocalDbHelper.createInstance(this);
         LocalQueryManager.getInstance().openWritable();
         drawerInfo.setText(getResources().getText(R.string.done_tasks_title) + ": " + LocalQueryManager.getInstance().countArchivedTasks());
         LocalQueryManager.getInstance().close();
+        if (drawerAdapter != null)
+            drawerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -176,4 +174,5 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
     public boolean onQueryTextChange(String s) {
         return false;
     }
+
 }

@@ -38,6 +38,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+
     public static TaskListFragment newInstance(int method) {
         TaskListFragment fragment = new TaskListFragment();
         Bundle args = new Bundle();
@@ -102,9 +103,15 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
         return view;
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         taskListAdapter.refresh();
+        taskListAdapter.notifyDataSetInvalidated();
+        if (manager instanceof CategoryGroupProvider) {
+            ((CategoryGroupProvider) manager).refresh();
+        }
+        taskList.deferNotifyDataSetChanged();
     }
 
     @Override
@@ -156,6 +163,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                         } else if (which == R.id.task_done) {
                             ta.markAsDone(task);
                             taskListAdapter.notifyDataSetChanged();
+                            ((TasksActivity) getActivity()).refreshArchivedTaskInfo();
                         }
                     }
                 }).show();
