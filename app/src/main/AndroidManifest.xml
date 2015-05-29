@@ -74,6 +74,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.piotrstaniow.organizeme.NewTaskActivity" />
         </activity>
+	    <receiver android:name=".TaskAlarmReceiver">
+		    <intent-filter>
+			    <action android:name="pl.piotrstaniow.TaskAlarmReceiver.TASK_ID"/>
+		    </intent-filter>
+	    </receiver>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -32,7 +33,7 @@ import java.util.List;
 
 public class NewTaskActivity extends ActionBarActivity
         implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener, TokenCompleteTextView.TokenListener{
+        TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener, TokenCompleteTextView.TokenListener, NumberPicker.OnValueChangeListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int GET_LOCATION_REQUEST_CODE = 1;
     LabelsCompletionView completionView;
@@ -45,6 +46,8 @@ public class NewTaskActivity extends ActionBarActivity
     ArrayAdapter<Label> labelAdapter;
     List<Label> task_labels;
     LabelAggregator la;
+    private NumberPicker taskLocationPrecisionNP;
+    private CheckBox taskLocationNotifyChB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,13 +135,11 @@ public class NewTaskActivity extends ActionBarActivity
         if(!i.hasExtra("task"))
             return;
 
-        Bundle bundle = getIntent().getExtras();
-        String str = bundle.getString("task");
-
         isEdit = true;
-        createdTask = Task.deserializeTask(str);
-        taskDescET.setText(createdTask.getTaskDesc());
+        Bundle bundle = getIntent().getExtras();
+        createdTask = bundle.getParcelable("task");
 
+        taskDescET.setText(createdTask.getTaskDesc());
         String[] spl = createdTask.getDisplayDate().split(" ");
         taskDateET.setText(spl[0]+" "+ spl[1]+" "+spl[2]);
         if (createdTask.isTimeSet())
@@ -149,6 +150,13 @@ public class NewTaskActivity extends ActionBarActivity
             for(Label l: temp_labels){
                 completionView.addObject(l);
             }
+        }
+
+        taskLocationNotifyChB.setChecked(createdTask.isLocationNotify());
+        taskLocationPrecisionNP.setValue(createdTask.getLocationPrecision());
+        if (createdTask.getLocation() != null) {
+            taskLocationET.setText(createdTask.getLocation().latitude + ", "
+                    + createdTask.getLocation().longitude);
         }
 
         int selectedCat = adapter.getPosition(createdTask.getCategory());
@@ -182,6 +190,31 @@ public class NewTaskActivity extends ActionBarActivity
 
         taskLocationET.setOnClickListener(this);
         taskLocationET.setOnFocusChangeListener(this);
+
+        taskLocationPrecisionNP = (NumberPicker)findViewById(R.id.task_location_precision);
+        taskLocationPrecisionNP.setMinValue(50);
+        taskLocationPrecisionNP.setMaxValue(2000);
+        taskLocationPrecisionNP.setWrapSelectorWheel(true);
+        taskLocationPrecisionNP.setOnValueChangedListener(this);
+
+        //Trick to make work NumberPicker inside ScrollView on my Android
+        taskLocationPrecisionNP.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(final View v, final MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE && v.getParent() != null) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.performClick();
+                }
+
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
+        taskLocationNotifyChB = (CheckBox)findViewById(R.id.task_location_notify);
+        taskLocationNotifyChB.setOnCheckedChangeListener(this);
 
         completionView = (LabelsCompletionView)findViewById(R.id.searchView);
         manageCategorySpinner();
@@ -305,6 +338,20 @@ public class NewTaskActivity extends ActionBarActivity
                 createdTask.setLocation((LatLng) bundle.getParcelable("location"));
                 taskLocationET.setText(createdTask.getLocation().latitude + ", " + createdTask.getLocation().longitude);
             }
+        }
+    }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        if(picker == taskLocationPrecisionNP) {
+            createdTask.setLocationPrecision(newVal);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView == taskLocationNotifyChB) {
+            createdTask.setLocationNotify(isChecked);
         }
     }
 }

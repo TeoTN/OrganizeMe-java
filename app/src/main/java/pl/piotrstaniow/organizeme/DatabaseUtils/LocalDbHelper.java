@@ -44,6 +44,10 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "task_name TEXT, " +
                 "deadline TEXT, " +
                 "category_name TEXT, " +
+                "location_latitude DOUBLE, " +
+                "location_longitude DOUBLE, " +
+                "location_precision INTEGER, " +
+                "location_notify INTEGER, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
 
         String createLabelTable = "CREATE TABLE IF NOT EXISTS label (name TEXT UNIQUE)";
@@ -117,6 +121,10 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "task_name TEXT, " +
                 "deadline TEXT, " +
                 "category_name TEXT, " +
+                "location_latitude DOUBLE, " +
+                "location_longitude DOUBLE, " +
+                "location_precision INTEGER, " +
+                "location_notify INTEGER, " +
                 "done TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
         sqLiteDatabase.execSQL(createArchivedTaskTable);

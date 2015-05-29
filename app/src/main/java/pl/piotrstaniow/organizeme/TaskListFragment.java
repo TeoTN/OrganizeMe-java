@@ -15,12 +15,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.AbstractTaskGroupProvider;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryGroupProvider;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateGroupProvider;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.PriorityGroupProvider;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.QueryGroupProvider;
-import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.*;
 
 
 public class TaskListFragment extends Fragment implements View.OnClickListener, ExpandableListView.OnChildClickListener {
@@ -148,7 +143,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
                             Intent intent = new Intent(getActivity(), NewTaskActivity.class);
-                            intent.putExtra("task",task.serialize());
+                            intent.putExtra("task", task);
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
@@ -156,7 +151,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                             taskListAdapter.notifyDataSetChanged();
 
                         } else if (which == R.id.task_notif) {
-                            pickNotif();
+                            pickNotif(task.getID());
                         } else if (which == R.id.task_done) {
                             ta.markAsDone(task);
                             taskListAdapter.notifyDataSetChanged();
@@ -166,7 +161,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
         return false;
     }
 
-    private void pickNotif() {
+    private void pickNotif(long task_id) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("picknotif");
         if (prev != null) {
@@ -174,8 +169,11 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
         }
         ft.addToBackStack(null);
 
-        // Create and show the dialog.
+        Bundle args = new Bundle();
+        args.putLong("TASK_ID", task_id);
+
         DialogFragment newFragment = new NotificationFragment();
+        newFragment.setArguments(args);
         newFragment.show(ft, "picknotif");
     }
 }

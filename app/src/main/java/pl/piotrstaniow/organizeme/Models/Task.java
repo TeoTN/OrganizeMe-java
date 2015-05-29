@@ -1,5 +1,8 @@
 package pl.piotrstaniow.organizeme.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
@@ -15,24 +18,45 @@ import java.util.List;
  * Email: staniowp@gmail.com
  * Created: 12.05.15
  */
-public class Task {
+public class Task implements Parcelable{
     private String taskDesc;
     private String displayDate;
     private Date date;
     private long myID;
     private Category category;
+    private List<Label> labels;
+    private LatLng location;
+    private int locationPrecision;
+    private boolean locationNotify;
+
     //Don't serialize following:
     private boolean isFirstInGroup;
     private boolean isDateSet = false;
     private boolean isTimeSet = false;
     private String predicate;
-    private List<Label> labels;
-    private LatLng location;
 
     public Task() {
         date = new Date();
         isFirstInGroup = false;
         labels = new ArrayList<>();
+    }
+
+    public Task(Parcel in){
+        taskDesc = in.readString();
+        boolean isTimeSet = (in.readByte() == 1);
+        setDate(DateTimeUtils.stringToDate(in.readString()), isTimeSet);
+        myID = in.readLong();
+        setCategory(CategoryAggregator.getInstance().getByName(in.readString()));
+        location = in.readParcelable(LatLng.class.getClassLoader());
+        locationPrecision = in.readInt();
+        locationNotify = in.readByte() == 1;
+        ArrayList<String> labelsNames = new ArrayList<>();
+        in.readStringList(labelsNames);
+        List<Label> labels_list = new ArrayList<>();
+        for(String l: labelsNames) {
+            labels_list.add(new Label(l));
+        }
+        setLabels(labels_list);
     }
 
     public static Task deserializeTask(String str) {
@@ -157,4 +181,52 @@ public class Task {
     public LatLng getLocation() {
         return location;
     }
+
+    public void setLocationPrecision(int locationPrecision) {
+        this.locationPrecision = locationPrecision;
+    }
+
+    public int getLocationPrecision() {
+        return locationPrecision;
+    }
+
+    public void setLocationNotify(boolean locationNotify) {
+        this.locationNotify = locationNotify;
+    }
+
+    public boolean isLocationNotify() {
+        return locationNotify;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(taskDesc);
+        dest.writeByte((byte) (isTimeSet ? 1 : 0));
+        dest.writeString(DateTimeUtils.dateToString(date, isTimeSet));
+        dest.writeLong(myID);
+        dest.writeString(category.getName());
+        dest.writeParcelable(location, flags);
+        dest.writeInt(locationPrecision);
+        dest.writeByte((byte)(locationNotify ? 1 : 0));
+        ArrayList<String> labelsNames = new ArrayList<>();
+        for(Label l: labels) {
+            labelsNames.add(l.getName());
+        }
+        dest.writeStringList(labelsNames);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 }

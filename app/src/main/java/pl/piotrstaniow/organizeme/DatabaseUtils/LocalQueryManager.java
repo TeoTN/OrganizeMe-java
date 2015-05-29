@@ -8,6 +8,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,10 @@ import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by Zuzanna Gniewaszewska on 17.05.15.
  */
@@ -27,17 +33,17 @@ public class LocalQueryManager {
     private SQLiteDatabase database;
     private LocalDbHelper dbHelper;
 
-    private LocalQueryManager(){
+    private LocalQueryManager() {
         try {
             dbHelper = LocalDbHelper.getInstance();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    public static LocalQueryManager getInstance(){
+    public static LocalQueryManager getInstance() {
         if (instance == null) {
-            synchronized(LocalQueryManager.class) {
+            synchronized (LocalQueryManager.class) {
                 if (instance == null) {
                     instance = new LocalQueryManager();
                 }
@@ -56,13 +62,14 @@ public class LocalQueryManager {
         dbHelper.close();
         super.finalize();
     }
-    public void close(){
+
+    public void close() {
         database.close();
         dbHelper.close();
     }
 
-    public long createTask(Task task){
-        long id =  database.insert("task", null, getContentValues(task));
+    public long createTask(Task task) {
+        long id = database.insert("task", null, getContentValues(task));
         task.setID(id);
         addLabelsOfTask(task);
         return id;
@@ -71,41 +78,42 @@ public class LocalQueryManager {
     private ContentValues getContentValues(Task task) {
         ContentValues values = new ContentValues();
         values.put("task_name", task.getTaskDesc());
-        if(task.isDateSet())
+        if (task.isDateSet()) {
             values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
-        Category category = getOrCreateCategory(task);
-        values.put("category_name", category.getName());
+        }
+        values.put("category_name", getOrCreateCategory(task).getName());
+        if (task.getLocation() != null) {
+            values.put("location_latitude", task.getLocation().latitude);
+            values.put("location_longitude", task.getLocation().longitude);
+        }
+        values.put("location_precision", task.getLocationPrecision());
+        values.put("location_notify", task.isLocationNotify());
         return values;
     }
 
     private Category getOrCreateCategory(Task task) {
         Category category = task.getCategory();
-        if(category == null){
+        if (category == null) {
             Context ctx = LocalDbHelper.getInstance().getContext();
             String unassigned_name = ctx.getResources().getString(R.string.unassigned_category_name);
             int unassigned_color = ctx.getResources().getColor(R.color.unassigned_category_color);
-            
+
             String[] columns = {"name"};
-            Cursor cursor = database.query("category",columns,"name='"+unassigned_name+"'",null,null,null,null);
+            Cursor cursor = database.query("category", columns, "name='" + unassigned_name + "'", null, null, null, null);
 
             category = new Category();
             category.setName(unassigned_name);
             category.setColor(String.valueOf(unassigned_color));
-            if(cursor.getCount() == 0){
+            if (cursor.getCount() == 0) {
                 createCategory(category);
             }
         }
         return category;
     }
 
-    public void editTask(Task task){
-        ContentValues values = new ContentValues();
-        values.put("task_name", task.getTaskDesc());
-        if(task.isDateSet())
-            values.put("deadline", DateTimeUtils.dateToString(task.getDate(), task.isTimeSet()));
-        values.put("category_name", task.getCategory().getName());
+    public void editTask(Task task) {
         addLabelsOfTask(task);
-        database.update("task", values, "id="+task.getID(), null);
+        database.update("task", getContentValues(task), "id=" + task.getID(), null);
     }
 
     public void archiveTask(Task task, Date time) {
@@ -115,7 +123,7 @@ public class LocalQueryManager {
         removeTask(task);
     }
 
-    public void removeTask(Task task){
+    public void removeTask(Task task) {
         long id = task.getID();
         database.delete("task", "id=" + id, null);
     }
@@ -124,17 +132,17 @@ public class LocalQueryManager {
         return DatabaseUtils.queryNumEntries(database, "archived_task");
     }
 
-    public void createLabel(String label){
+    public void createLabel(String label) {
         ContentValues values = new ContentValues();
         values.put("name", label);
         database.insert("label", null, values);
     }
 
-    public void addLabelsOfTask(Task task){
-        database.delete("task_label","task_id="+task.getID(),null);
+    public void addLabelsOfTask(Task task) {
+        database.delete("task_label", "task_id=" + task.getID(), null);
         List<Label> alreadyInDB = new ArrayList<>();
-        for(Label label: task.getLabels()) {
-            if(!alreadyInDB.contains(label)){
+        for (Label label : task.getLabels()) {
+            if (!alreadyInDB.contains(label)) {
                 alreadyInDB.add(label);
                 ContentValues values = new ContentValues();
                 values.put("task_id", task.getID());
@@ -145,7 +153,7 @@ public class LocalQueryManager {
         }
     }
 
-	public void createCategory(Category category) {
+    public void createCategory(Category category) {
         ContentValues values = new ContentValues();
         values.put("name", category.getName());
         values.put("color", category.getColor());
@@ -159,49 +167,55 @@ public class LocalQueryManager {
         database.update("category", values, "name=\"" + category.getName() + "\"", null);
     }
 
-	public void removeCategory(Category category){
+    public void removeCategory(Category category) {
         database.delete("task", "category_name=\"" + category.getName() + "\"", null);
-		database.delete("category", "name=\"" + category.getName() + "\"", null);
-	}
+        database.delete("category", "name=\"" + category.getName() + "\"", null);
+    }
 
-    public Task getTaskById(long id){
+    public Task getTaskById(long id) {
         SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
         sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
         Task task = new Task();
 
-        String[] columns = {"id", "task_name", "deadline", "category_name", "color"};
-        Cursor cursor = sqb.query(database,columns,"id="+id,null,null,null,null);
+        String[] columns = {"id", "task_name", "deadline", "location_latitude",
+                "location_longitude", "location_precision", "location_notify", "category_name", "color"};
+        Cursor cursor = sqb.query(database, columns, "id=" + id, null, null, null, null);
         cursor.moveToFirst();
 
         task.setID(id);
         task.setTaskDesc(cursor.getString(1));
+        if (!cursor.isNull(3) && cursor.isNull(4)) {
+            task.setLocation(new LatLng(cursor.getDouble(3), cursor.getDouble(4)));
+        }
+        task.setLocationPrecision(cursor.getInt(5));
+        task.setLocationNotify(cursor.getInt(6) == 1);
 
         String taskDate = cursor.getString(2);
         boolean isTimeSet = false;
-        if(taskDate != null) {
+        if (taskDate != null) {
             if (taskDate.contains(" "))
                 isTimeSet = true;
 
             task.setDate(DateTimeUtils.stringToDate(taskDate), isTimeSet);
         }
 
-        String category = cursor.getString(3);
-        String color = cursor.getString(4);
+        String category = cursor.getString(7);
+        String color = cursor.getString(8);
         Category cat = new Category();
         cat.setColor(color);
         cat.setName(category);
         task.setCategory(cat);
         cursor.close();
         return task;
-	}
+    }
 
-    public List<Task> getAllTasks(){
+    public List<Task> getAllTasks() {
         SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
         sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
 
         List<Task> taskList = new ArrayList<>();
         String[] columns = {"id", "task_name", "deadline", "category_name", "color"};
-        Cursor cursor = sqb.query(database,columns,null,null,null,null,null);
+        Cursor cursor = sqb.query(database, columns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             long id = cursor.getLong(0);
@@ -216,7 +230,7 @@ public class LocalQueryManager {
             task.setCategory(cat);
             boolean isTimeSet = false;
 
-            if(taskDate != null) {
+            if (taskDate != null) {
                 if (taskDate.contains(" "))
                     isTimeSet = true;
 
@@ -240,7 +254,7 @@ public class LocalQueryManager {
     public List<Category> getAllCategories() {
         List<Category> categoryList = new ArrayList<>();
         String[] columns = {"name", "color"};
-        Cursor cursor = database.query("category",columns,null,null,null,null,null);
+        Cursor cursor = database.query("category", columns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             String name = cursor.getString(0);
@@ -255,12 +269,12 @@ public class LocalQueryManager {
         return categoryList;
     }
 
-    public List<Label> getAllLabels(){
+    public List<Label> getAllLabels() {
         List<Label> labelList = new ArrayList<>();
         String[] columns = {"name"};
-        Cursor cursor = database.query("label",columns,null,null,null,null,null);
+        Cursor cursor = database.query("label", columns, null, null, null, null, null);
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             labelList.add(new Label(cursor.getString(0)));
             cursor.moveToNext();
         }
@@ -268,12 +282,12 @@ public class LocalQueryManager {
         return labelList;
     }
 
-    public List<Label> getLabelsOfTask(Task task){
+    public List<Label> getLabelsOfTask(Task task) {
         List<Label> labelList = new ArrayList<>();
         String[] columns = {"label_name"};
-        Cursor cursor = database.query("task_label",columns,"task_id="+task.getID(),null,null,null,null);
+        Cursor cursor = database.query("task_label", columns, "task_id=" + task.getID(), null, null, null, null);
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             labelList.add(new Label(cursor.getString(0)));
             cursor.moveToNext();
         }
@@ -283,13 +297,13 @@ public class LocalQueryManager {
 
     public long createNotification(NotificationItem ni){
         ContentValues values = new ContentValues();
-        values.put("task_id", ni.getTaskId());
+        values.put("task_id", ni.getTaskID());
         values.put("type", ni.getType());
         return database.insert("notification", null, values);
     }
 
     public void removeNotification(NotificationItem ni){
-        database.delete("notification","id="+ni.getTaskId(),null);
+        database.delete("notification", "id=" + ni.getTaskID(), null);
     }
 
     public List<NotificationItem> getAllNotifications(){
@@ -298,7 +312,7 @@ public class LocalQueryManager {
         NotificationItem ni;
         Cursor cursor = database.query("notifications",columns,null,null,null,null,null);
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             ni = new NotificationItem();
             ni.setNotifID(cursor.getLong(0));
             ni.setTaskID(cursor.getLong(1));
