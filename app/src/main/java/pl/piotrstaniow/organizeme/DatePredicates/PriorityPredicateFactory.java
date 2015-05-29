@@ -43,7 +43,8 @@ public class PriorityPredicateFactory {
                 List<Label> labels = task.getLabels();
                 boolean containsPriority = false;
                 for(Label l: labels){
-                    if(l.getName().contains("priority"))
+                    String name = l.getName();
+                    if(name.equals("High") || name.equals("Normal") || name.equals("Low"))
                         containsPriority = true;
                 }
                 return !containsPriority;

@@ -75,10 +75,10 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         values.put("name", unassigned_name);
         values.put("color", unassigned_color);
         database.insert("category", null, values);
-
-        for(int i=1; i<=4; ++i){
+        String[] priorities = {"High", "Normal", "Low"};
+        for(String p: priorities){
             values = new ContentValues();
-            values.put("name", "priority_"+i);
+            values.put("name", p);
             database.insert("label", null, values);
         }
     }

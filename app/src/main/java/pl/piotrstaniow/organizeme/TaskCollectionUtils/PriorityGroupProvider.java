@@ -13,9 +13,11 @@ public class PriorityGroupProvider extends AbstractTaskGroupProvider {
 
     private void addPredicates() {
         PriorityPredicateFactory priorityPredicateFactory = PriorityPredicateFactory.getInstance();
-        for (int i = 1; i <= 4; ++i) {
-            predicateList.add(priorityPredicateFactory.getPredicateForPriority("priority_" + i));
-        }
+
+        predicateList.add(priorityPredicateFactory.getPredicateForPriority("High"));
+        predicateList.add(priorityPredicateFactory.getPredicateForPriority("Normal"));
+        predicateList.add(priorityPredicateFactory.getPredicateForPriority("Low"));
+
         predicateList.add(priorityPredicateFactory.getPredicateWithoutPriority());
     }
 }
