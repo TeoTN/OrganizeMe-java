@@ -15,7 +15,7 @@
 	<GridView
 			android:id="@+id/notif_grid"
 			android:layout_width="300dp"
-			android:layout_height="200dp"
+			android:layout_height="300dp"
 			android:columnWidth="90dp"
 			android:numColumns="3"
 			android:verticalSpacing="10dp"

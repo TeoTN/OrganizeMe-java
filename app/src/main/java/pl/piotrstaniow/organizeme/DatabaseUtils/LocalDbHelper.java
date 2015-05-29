@@ -75,10 +75,15 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         values.put("name", unassigned_name);
         values.put("color", unassigned_color);
         database.insert("category", null, values);
-
+        String[] priorities = {"High", "Normal", "Low"};
+        for(String p: priorities){
+            values = new ContentValues();
+            values.put("name", p);
+            database.insert("label", null, values);
+        }
     }
     private void dropTables(SQLiteDatabase database){
-        String[] tables = {"task","archived_task", "category", "label", "task_label"};
+        String[] tables = {"notification","task","archived_task", "category", "label", "task_label"};
         for (String s : tables){
             database.execSQL("DROP TABLE IF EXISTS " + s);
         }

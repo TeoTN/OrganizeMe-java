@@ -5,9 +5,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 
@@ -73,6 +71,22 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
         }
         TextView item = (TextView) view.findViewById(R.id.task_group_title);
         CardView card = (CardView) view.findViewById(R.id.category_card);
+        ImageButton edBtn = (ImageButton) view.findViewById(R.id.category_edit);
+        ImageButton rmBtn = (ImageButton) view.findViewById(R.id.category_delete);
+        edBtn.setFocusable(false);
+        rmBtn.setFocusable(false);
+        edBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ctx, "EDIT", Toast.LENGTH_SHORT).show();
+            }
+        });
+        rmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ctx, "REMOVE", Toast.LENGTH_SHORT).show();
+            }
+        });
         card.setRadius((float) 0.0);
         item.setText(title);
         return view;

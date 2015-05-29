@@ -22,6 +22,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
     public static final int GROUP_BY_DATE = 13;
     public static final int GROUP_BY_CATEGORY = 14;
     public static final int GROUP_BY_QUERY = 15;
+    public static final int GROUP_BY_PRIORITY = 16;
     private static final String GROUP_METHOD = "GroupingMethodParameter";
     private static final String SEARCH_QUERY = "search_query";
     private int groupingMethod;
@@ -69,6 +70,9 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
             case GROUP_BY_QUERY:
                 query = getArguments().getString(SEARCH_QUERY);
                 manager = new QueryGroupProvider(query);
+                break;
+            case GROUP_BY_PRIORITY:
+                manager = new PriorityGroupProvider();
                 break;
             default:
                 manager = new DateGroupProvider();
@@ -139,7 +143,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
                             Intent intent = new Intent(getActivity(), NewTaskActivity.class);
-                            intent.putExtra("task", task);
+                            intent.putExtra("task", task.serialize());
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
@@ -159,7 +163,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
 
     private void pickNotif(long task_id) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("picknotif");
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("picknotif");
         if (prev != null) {
             ft.remove(prev);
         }
