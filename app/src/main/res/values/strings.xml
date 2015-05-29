@@ -16,12 +16,9 @@
     <string name="btn_dismiss_task">CANCEL</string>
     <string name="title_activity_new_task">New Task</string>
     <string name="title_activity_categories">CategoriesActivity</string>
-
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
 	<string name="task_edit">Edit</string>
 	<string name="task_delete">Delete</string>
-	<string name="task_notif">Notifications</string>
+	<string name="task_notif">Add notification</string>
     <string name="title_activity_edit_task">Edit Task</string>
 	<string name="unassigned_category_name">Unassigned</string>
 	<string name="uncategorized">Uncategorized</string>

@@ -15,14 +15,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
-
-import pl.piotrstaniow.organizeme.Models.Category;
-import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
-import pl.piotrstaniow.organizeme.Models.Label;
-import pl.piotrstaniow.organizeme.Models.LabelAggregator;
-import pl.piotrstaniow.organizeme.Models.LabelsCompletionView;
-import pl.piotrstaniow.organizeme.Models.Task;
-import pl.piotrstaniow.organizeme.Models.TaskAggregator;
+import pl.piotrstaniow.organizeme.Models.*;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -46,6 +39,7 @@ public class NewTaskActivity extends ActionBarActivity
     ArrayAdapter<Label> labelAdapter;
     List<Label> task_labels;
     LabelAggregator la;
+    //private Button addNotifBtn;
     private NumberPicker taskLocationPrecisionNP;
     private CheckBox taskLocationNotifyChB;
 
@@ -111,6 +105,19 @@ public class NewTaskActivity extends ActionBarActivity
             }
             editTask();
         }
+
+        /*
+        if (view == addNotifBtn) {
+            if (taskTimeET.getText().length() == 0 ||
+                    taskDateET.getText().length() == 0)
+            {
+                Toast.makeText(this, "First select time and date", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                pickNotif(createdTask.getID());
+            }
+        }
+        */
         if (view == taskDateET) {
             pickDate();
         }
@@ -174,6 +181,8 @@ public class NewTaskActivity extends ActionBarActivity
     private void setVariables(){
         createBtn = (FloatingActionButton) findViewById(R.id.create_new_task);
         createBtn.setOnClickListener(this);
+        //addNotifBtn = (Button) findViewById(R.id.add_notif_btn);
+        //addNotifBtn.setOnClickListener(this);
 
         taskDateET = (EditText) findViewById(R.id.task_date);
         taskDescET = (EditText) findViewById(R.id.task_desc);
@@ -354,4 +363,21 @@ public class NewTaskActivity extends ActionBarActivity
             createdTask.setLocationNotify(isChecked);
         }
     }
+    /*
+    private void pickNotif(long task_id) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("picknotif");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        args.putLong("TASK_ID", task_id);
+
+        DialogFragment newFragment = new NotificationFragment();
+        newFragment.setArguments(args);
+        newFragment.show(ft, "picknotif");
+    }
+    */
 }

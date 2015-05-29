@@ -143,7 +143,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == R.id.task_edit) {
                             Intent intent = new Intent(getActivity(), NewTaskActivity.class);
-                            intent.putExtra("task", task);
+                            intent.putExtra("task", task.serialize());
                             startActivity(intent);
                             taskListAdapter.notifyDataSetChanged();
                         } else if (which == R.id.task_delete) {
@@ -163,7 +163,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
 
     private void pickNotif(long task_id) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("picknotif");
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("picknotif");
         if (prev != null) {
             ft.remove(prev);
         }
