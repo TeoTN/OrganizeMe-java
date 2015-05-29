@@ -34,6 +34,8 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
             fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_DATE);
         } else if (drawerOptions[position].equals("Categories")) {
             fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_CATEGORY);
+        } else if (drawerOptions[position].equals("Priority")){
+            fragment = TaskListFragment.newInstance(TaskListFragment.GROUP_BY_PRIORITY);
         }
 
         FragmentManager fragmentManager = ((TasksActivity) context).getSupportFragmentManager();

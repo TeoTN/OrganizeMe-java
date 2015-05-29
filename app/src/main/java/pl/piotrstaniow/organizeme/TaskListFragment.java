@@ -18,6 +18,7 @@ import pl.piotrstaniow.organizeme.Models.TaskAggregator;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.AbstractTaskGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.CategoryGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateGroupProvider;
+import pl.piotrstaniow.organizeme.TaskCollectionUtils.PriorityGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.QueryGroupProvider;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.TaskListAdapter;
 
@@ -26,6 +27,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
     public static final int GROUP_BY_DATE = 13;
     public static final int GROUP_BY_CATEGORY = 14;
     public static final int GROUP_BY_QUERY = 15;
+    public static final int GROUP_BY_PRIORITY = 16;
     private static final String GROUP_METHOD = "GroupingMethodParameter";
     private static final String SEARCH_QUERY = "search_query";
     private int groupingMethod;
@@ -73,6 +75,9 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
             case GROUP_BY_QUERY:
                 query = getArguments().getString(SEARCH_QUERY);
                 manager = new QueryGroupProvider(query);
+                break;
+            case GROUP_BY_PRIORITY:
+                manager = new PriorityGroupProvider();
                 break;
             default:
                 manager = new DateGroupProvider();
