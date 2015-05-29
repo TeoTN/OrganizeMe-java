@@ -184,7 +184,7 @@ public class LocalQueryManager {
 
         task.setID(id);
         task.setTaskDesc(cursor.getString(1));
-        if (!cursor.isNull(3) && cursor.isNull(4)) {
+        if (!cursor.isNull(3) && !cursor.isNull(4)) {
             task.setLocation(new LatLng(cursor.getDouble(3), cursor.getDouble(4)));
         }
         task.setLocationPrecision(cursor.getInt(5));
@@ -214,21 +214,30 @@ public class LocalQueryManager {
         sqb.setTables("task INNER JOIN category ON task.category_name = category.name");
 
         List<Task> taskList = new ArrayList<>();
-        String[] columns = {"id", "task_name", "deadline", "category_name", "color"};
+        String[] columns = {"id", "task_name", "deadline", "location_latitude",  "location_longitude",
+                "location_precision", "location_notify", "category_name", "color"};
         Cursor cursor = sqb.query(database, columns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             long id = cursor.getLong(0);
             String taskDesc = cursor.getString(1);
             String taskDate = cursor.getString(2);
-            String category = cursor.getString(3);
-            String color = cursor.getString(4);
+            String category = cursor.getString(7);
+            String color = cursor.getString(8);
             Category cat = new Category();
             cat.setColor(color);
             cat.setName(category);
             Task task = new Task();
             task.setCategory(cat);
             boolean isTimeSet = false;
+
+            task.setID(id);
+            task.setTaskDesc(cursor.getString(1));
+            if (!cursor.isNull(3) && !cursor.isNull(4)) {
+                task.setLocation(new LatLng(cursor.getDouble(3), cursor.getDouble(4)));
+            }
+            task.setLocationPrecision(cursor.getInt(5));
+            task.setLocationNotify(cursor.getInt(6) == 1);
 
             if (taskDate != null) {
                 if (taskDate.contains(" "))

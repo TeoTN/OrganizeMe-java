@@ -1,6 +1,8 @@
 package pl.piotrstaniow.organizeme;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +42,13 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent ishintent = new Intent(this, GPSPositionCheckingService.class);
+        PendingIntent pintent = PendingIntent.getService(this, 0, ishintent, 0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pintent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*2, pintent);
+
         setContentView(R.layout.activity_tasks);
         LocalDbHelper.createInstance(this);
 

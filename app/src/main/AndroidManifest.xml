@@ -74,11 +74,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.piotrstaniow.organizeme.NewTaskActivity" />
         </activity>
-	    <receiver android:name=".TaskAlarmReceiver">
-		    <intent-filter>
-			    <action android:name="pl.piotrstaniow.TaskAlarmReceiver.TASK_ID"/>
-		    </intent-filter>
-	    </receiver>
+
+        <receiver android:name=".TaskAlarmReceiver" >
+            <intent-filter>
+                <action android:name="pl.piotrstaniow.TaskAlarmReceiver.TASK_ID" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".GPSPositionCheckingService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
