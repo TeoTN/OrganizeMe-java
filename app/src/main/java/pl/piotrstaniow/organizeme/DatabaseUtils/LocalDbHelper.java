@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
 
 import pl.piotrstaniow.organizeme.R;
 
@@ -62,6 +63,7 @@ public class LocalDbHelper extends SQLiteOpenHelper{
         database.execSQL(createLabelTable);
         database.execSQL(createTaskLabelTable);
         createArchivedTaskTable(database);
+        createNotificationTable(database);
 
     }
 
@@ -95,10 +97,13 @@ public class LocalDbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-
-        dropTables(sqLiteDatabase);
-        createTables(sqLiteDatabase);
-        createMandatoryEntries(sqLiteDatabase);
+        if(oldVersion < 3) {
+            dropTables(sqLiteDatabase);
+            createTables(sqLiteDatabase);
+            createMandatoryEntries(sqLiteDatabase);
+        } else {
+            createNotificationTable(sqLiteDatabase);
+        }
     }
 
     public Context getContext() {
@@ -118,5 +123,14 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "done TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
         sqLiteDatabase.execSQL(createArchivedTaskTable);
+    }
+
+    private void createNotificationTable(SQLiteDatabase sqLiteDatabase){
+        String createNotificationTable = "CREATE TABLE IF NOT EXISTS notification (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "task_id INTEGER, " +
+                "type TEXT, "  +
+                "FOREIGN KEY(task_id) REFERENCES task(id))";
+        sqLiteDatabase.execSQL(createNotificationTable);
     }
 }

@@ -5,19 +5,23 @@ import com.android.internal.util.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
+import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
+
 /**
  * Created by piotr on 29.05.15.
  */
 public class NotificationAggregator implements ItemAggregator<NotificationItem> {
     private static NotificationAggregator instance = null;
     private List<NotificationItem> notificationItemList;
+    private LocalQueryManager localQueryManager;
 
     private NotificationAggregator() {
         notificationItemList = new ArrayList<>();
-        /*localQueryManager = LocalQueryManager.getInstance();
+        localQueryManager = LocalQueryManager.getInstance();
         localQueryManager.openWritable();
-        taskList = localQueryManager.getAllTasks();
-        localQueryManager.close();*/
+        notificationItemList = localQueryManager.getAllNotifications();
+        localQueryManager.close();
     }
 
     public static NotificationAggregator getInstance() {
@@ -34,11 +38,18 @@ public class NotificationAggregator implements ItemAggregator<NotificationItem> 
 
     @Override
     public void add(NotificationItem newItem) {
+        localQueryManager.openWritable();
+        long id = localQueryManager.createNotification(newItem);
+        localQueryManager.close();
+        newItem.setTaskID(id);
         notificationItemList.add(newItem);
     }
 
     @Override
     public void remove(NotificationItem item) {
+        localQueryManager.openWritable();
+        localQueryManager.removeNotification(item);
+        localQueryManager.close();
         notificationItemList.remove(item);
     }
 

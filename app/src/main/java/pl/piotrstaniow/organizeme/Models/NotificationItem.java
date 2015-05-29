@@ -22,4 +22,12 @@ public class NotificationItem {
     public void setType(String type) {
         this.type = type;
     }
+
+    public long getTaskId() {
+        return task_id;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

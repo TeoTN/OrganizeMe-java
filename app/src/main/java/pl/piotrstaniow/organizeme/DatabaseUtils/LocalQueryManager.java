@@ -16,6 +16,7 @@ import java.util.List;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.Label;
+import pl.piotrstaniow.organizeme.Models.NotificationItem;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
@@ -290,17 +291,32 @@ public class LocalQueryManager {
         return labelList;
     }
 
-    public List<Task> getTasksByLabel(String label) {
-        List<Task> taskList = new ArrayList<>();
-        String[] columns = {"label_name"};
-        Cursor cursor = database.query("task_label", columns, "label_name=" + label, null, null, null, null);
+    public long createNotification(NotificationItem ni){
+        ContentValues values = new ContentValues();
+        values.put("task_id", ni.getTaskId());
+        values.put("type", ni.getType());
+        return database.insert("notification", null, values);
+    }
+
+    public void removeNotification(NotificationItem ni){
+        database.delete("notification","id="+ni.getTaskId(),null);
+    }
+
+    public List<NotificationItem> getAllNotifications(){
+        List<NotificationItem> notificationItems = new ArrayList<>();
+        String[] columns = {"id", "task_id", "type"};
+        NotificationItem ni;
+        Cursor cursor = database.query("notifications",columns,null,null,null,null,null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            long id = cursor.getLong(0);
-            taskList.add(getTaskById(id));
+            ni = new NotificationItem();
+            ni.setNotifID(cursor.getLong(0));
+            ni.setTaskID(cursor.getLong(1));
+            ni.setType(cursor.getString(2));
+            notificationItems.add(ni);
             cursor.moveToNext();
         }
         cursor.close();
-        return taskList;
+        return notificationItems;
     }
 }
