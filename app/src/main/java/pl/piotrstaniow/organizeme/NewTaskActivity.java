@@ -135,13 +135,11 @@ public class NewTaskActivity extends ActionBarActivity
         if(!i.hasExtra("task"))
             return;
 
-        Bundle bundle = getIntent().getExtras();
-        String str = bundle.getString("task");
-
         isEdit = true;
-        createdTask = Task.deserializeTask(str);
-        taskDescET.setText(createdTask.getTaskDesc());
+        Bundle bundle = getIntent().getExtras();
+        createdTask = bundle.getParcelable("task");
 
+        taskDescET.setText(createdTask.getTaskDesc());
         String[] spl = createdTask.getDisplayDate().split(" ");
         taskDateET.setText(spl[0]+" "+ spl[1]+" "+spl[2]);
         if (createdTask.isTimeSet())
@@ -152,6 +150,13 @@ public class NewTaskActivity extends ActionBarActivity
             for(Label l: temp_labels){
                 completionView.addObject(l);
             }
+        }
+
+        taskLocationNotifyChB.setChecked(createdTask.isLocationNotify());
+        taskLocationPrecisionNP.setValue(createdTask.getLocationPrecision());
+        if (createdTask.getLocation() != null) {
+            taskLocationET.setText(createdTask.getLocation().latitude + ", "
+                    + createdTask.getLocation().longitude);
         }
 
         int selectedCat = adapter.getPosition(createdTask.getCategory());

@@ -12,7 +12,7 @@ import pl.piotrstaniow.organizeme.R;
  */
 public class LocalDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "OrganizeMeDB";
     private static LocalDbHelper instance = null;
     private Context context;
@@ -43,6 +43,10 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "task_name TEXT, " +
                 "deadline TEXT, " +
                 "category_name TEXT, " +
+                "location_latitude DOUBLE, " +
+                "location_longitude DOUBLE, " +
+                "location_precision INTEGER, " +
+                "location_notify INTEGER, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
 
         String createLabelTable = "CREATE TABLE IF NOT EXISTS label (name TEXT UNIQUE)";
@@ -107,6 +111,10 @@ public class LocalDbHelper extends SQLiteOpenHelper{
                 "task_name TEXT, " +
                 "deadline TEXT, " +
                 "category_name TEXT, " +
+                "location_latitude DOUBLE, " +
+                "location_longitude DOUBLE, " +
+                "location_precision INTEGER, " +
+                "location_notify INTEGER, " +
                 "done TEXT, " +
                 "FOREIGN KEY(category_name) REFERENCES category(name))";
         sqLiteDatabase.execSQL(createArchivedTaskTable);
