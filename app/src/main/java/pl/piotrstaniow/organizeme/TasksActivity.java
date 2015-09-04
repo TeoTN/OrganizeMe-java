@@ -32,7 +32,7 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
     private ListView drawerList;
     private FrameLayout contentFrame;
     private TextView drawerInfo;
-    private ArrayAdapter drawerAdapter;
+    private ArrayAdapter drawerListAdapter;
     private ActionBarDrawerToggle drawerToggle;
 
     @Override
@@ -41,9 +41,9 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
 
         Intent ishintent = new Intent(this, GPSPositionCheckingService.class);
         PendingIntent pintent = PendingIntent.getService(this, 0, ishintent, 0);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pintent);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*2, pintent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 2, pintent);
 
         setContentView(R.layout.activity_tasks);
         LocalDbHelper.createInstance(this);
@@ -52,12 +52,12 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
 
         drawerOptions = getResources().getStringArray(R.array.drawer_options);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerInfo = (TextView) findViewById(R.id.done_tasks);
+        drawerInfo = (TextView) findViewById(R.id.tv_done);
         refreshArchivedTaskInfo();
-        drawerAdapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions);
+        drawerListAdapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions);
 
         drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setAdapter(drawerAdapter);
+        drawerList.setAdapter(drawerListAdapter);
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
 
         drawerToggle = new ActionBarDrawerToggle(
@@ -75,10 +75,12 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
     public void refreshArchivedTaskInfo() {
         LocalDbHelper.createInstance(this);
         LocalQueryManager.getInstance().openWritable();
-        drawerInfo.setText(getResources().getText(R.string.done_tasks_title) + ": " + LocalQueryManager.getInstance().countArchivedTasks());
+        CharSequence tasks_done = getResources().getText(R.string.drawer_tasks_done);
+        long done_count = LocalQueryManager.getInstance().countArchivedTasks();
+        drawerInfo.setText(done_count + " " + tasks_done);
         LocalQueryManager.getInstance().close();
-        if (drawerAdapter != null)
-            drawerAdapter.notifyDataSetChanged();
+        if (drawerListAdapter != null)
+            drawerListAdapter.notifyDataSetChanged();
     }
 
     @Override

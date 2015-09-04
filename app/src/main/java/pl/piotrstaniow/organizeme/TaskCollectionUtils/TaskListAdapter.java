@@ -2,6 +2,10 @@ package pl.piotrstaniow.organizeme.TaskCollectionUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,15 +134,14 @@ public class TaskListAdapter extends BaseExpandableListAdapter implements View.O
 
         TextView text1 = (TextView) view.findViewById(R.id.text1);
         TextView text2 = (TextView) view.findViewById(R.id.text2);
-        ImageView label = (ImageView) view.findViewById(R.id.category);
+        View label = view.findViewById(R.id.category);
 
         text1.setText(task.getTaskDesc());
         text2.setText(task.getDisplayDate());
 
-        label.setBackgroundColor(Integer.parseInt(task.getCategory().getColor()));
-
-        CardView card = (CardView) view.findViewById(R.id.task_card);
-        card.setRadius(0);
+        int label_color = Integer.parseInt(task.getCategory().getColor());
+        GradientDrawable circle_shape = (GradientDrawable) label.getBackground();
+        circle_shape.setColor(label_color);
 
         return view;
     }

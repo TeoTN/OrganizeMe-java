@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="drawer_options">
-		<item>All tasks</item>
+		<item>Pending tasks</item>
 		<item>Categories</item>
-        <item>Priority</item>
-	</string-array>
+        <item>Ordered by priority</item>
+        <item>Archived</item>
+        <item>Settings</item>
+        <item>Help &amp; feedback</item>
+    </string-array>
 	<string-array name="notif_types">
 		<item>Just in time</item>
 		<item>5 min</item>

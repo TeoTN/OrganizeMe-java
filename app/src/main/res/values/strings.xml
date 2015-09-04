@@ -25,8 +25,10 @@
 	<string name="drawer_open">Open menu</string>
 	<string name="drawer_close">Close menu</string>
     <string name="task_done">Done</string>
-    <string name="done_tasks_title">Done tasks</string>
     <string name="title_activity_search_results">Search Results</string>
     <string name="title_activity_maps">Map</string>
-
+    <string name="drawer_default_username">Matthew M.</string>
+    <string name="drawer_tasks_done">tasks done</string>
+    <string name="drawer_tasks_today">0 tasks today</string>
+    <string name="drawer_tasks_future">0 tasks in future</string>
 </resources>
