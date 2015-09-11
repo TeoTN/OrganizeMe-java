@@ -31,4 +31,7 @@
     <string name="drawer_tasks_done">tasks done</string>
     <string name="drawer_tasks_today">0 tasks today</string>
     <string name="drawer_tasks_future">0 tasks in future</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

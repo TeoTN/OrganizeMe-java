@@ -1,6 +1,6 @@
 <android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- The main content view -->
@@ -8,79 +8,12 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </FrameLayout>
-    <!-- The navigation drawer -->
-    <RelativeLayout
-        android:id="@+id/left_drawer"
-        android:layout_width="400dp"
+    <FrameLayout
+        android:id="@+id/navigation_drawer"
+        android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_gravity="start"
-        android:orientation="vertical" >
-        <android.support.v7.widget.Toolbar
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/accent_light"
-            android:id="@+id/drawer_toolbar"
-            android:padding="16dp">
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/drawer_default_username"
-                    android:textColor="@color/accent"
-                    style="@style/Base.TextAppearance.AppCompat.Display2"
-                    />
-                <ImageView
-                    style="@style/drawer_icon"
-                    android:src="@drawable/ic_done_all"
-                    android:layout_below="@id/tv_username"
-                    android:id="@+id/icon_done"
-                    />
-                <TextView
-                    style="@style/drawer_text"
-                    android:id="@+id/tv_done"
-                    android:text="@string/drawer_tasks_done"
-                    android:layout_toRightOf="@id/icon_done"
-                    android:layout_below="@id/tv_username"
-                    />
-                <ImageView
-                    style="@style/drawer_icon"
-                    android:src="@drawable/ic_today"
-                    android:layout_below="@id/icon_done"
-                    android:id="@+id/icon_today"
-                    />
-                <TextView
-                    style="@style/drawer_text"
-                    android:id="@+id/tv_today_tasks"
-                    android:text="@string/drawer_tasks_today"
-                    android:layout_toRightOf="@id/icon_today"
-                    android:layout_below="@id/tv_done"
-                    />
-                <ImageView
-                    style="@style/drawer_icon"
-                    android:src="@drawable/ic_future"
-                    android:layout_below="@id/icon_today"
-                    android:id="@+id/icon_future"
-                    />
-                <TextView
-                    style="@style/drawer_text"
-                    android:id="@+id/tv_future_tasks"
-                    android:text="@string/drawer_tasks_future"
-                    android:layout_toRightOf="@id/icon_future"
-                    android:layout_below="@id/tv_today_tasks"
-                    />
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
-        <ListView
-            android:id="@+id/drawer_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/drawer_toolbar"
-            android:background="@color/white"
-            android:choiceMode="singleChoice"/>
-    </RelativeLayout>
+        />
 </android.support.v4.widget.DrawerLayout>

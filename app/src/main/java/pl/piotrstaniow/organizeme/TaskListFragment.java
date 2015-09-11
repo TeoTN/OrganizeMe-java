@@ -163,7 +163,7 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                         } else if (which == R.id.task_done) {
                             ta.markAsDone(task);
                             taskListAdapter.notifyDataSetChanged();
-                            ((TasksActivity) getActivity()).refreshArchivedTaskInfo();
+                            ((TasksActivity) getActivity()).refreshTasksDone();
                         }
                     }
                 }).show();

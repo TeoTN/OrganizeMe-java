@@ -1,62 +1,70 @@
 package pl.piotrstaniow.organizeme.NavigationDrawer;
 
+import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import pl.piotrstaniow.organizeme.R;
+
+import java.util.ArrayList;
 
 /**
- * Created by piotr on 22.05.15.
+ * Created by piotr on 11.09.15.
  */
-public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
-    public NavigationDrawerAdapter() {}
-    @Override
-    public int getGroupCount() {
-        return 1;
+public class NavigationDrawerAdapter extends BaseAdapter {
+    private final Activity context;
+    private final ArrayList<NavigationDrawerItem> items;
+
+    public NavigationDrawerAdapter(Activity context, ArrayList items) {
+        this.context = context;
+        this.items = items;
+    }
+
+    static class ItemViewHolder {
+        public ImageView icon;
+        public TextView text;
+        public TextView value;
     }
 
     @Override
-    public int getChildrenCount(int i) {
-        return CategoryAggregator.getInstance().getSize();
+    public int getCount() {
+        return items.size();
     }
 
     @Override
-    public Object getGroup(int i) {
-        return null;
+    public NavigationDrawerItem getItem(int position) {
+        return items.get(position);
     }
 
     @Override
-    public Object getChild(int i, int i1) {
-        return null;
+    public long getItemId(int position) {
+        return items.get(position).hashCode();
     }
 
     @Override
-    public long getGroupId(int i) {
-        return 0;
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View rowView = convertView;
+        if (rowView == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            rowView = inflater.inflate(R.layout.navigation_drawer_item, null);
+            ItemViewHolder viewHolder = new ItemViewHolder();
+            viewHolder.text = (TextView) rowView.findViewById(R.id.drawer_item_text);
+            viewHolder.icon = (ImageView) rowView.findViewById(R.id.drawer_item_icon);
+            viewHolder.value = (TextView) rowView.findViewById(R.id.drawer_item_value);
+            rowView.setTag(viewHolder);
+        }
 
-    @Override
-    public long getChildId(int i, int i1) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        return null;
-    }
-
-    @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        return null;
-    }
-
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return false;
+        ItemViewHolder holder = (ItemViewHolder) rowView.getTag();
+        NavigationDrawerItem item = items.get(position);
+        holder.text.setText(item.text);
+        holder.icon.setImageResource(item.icon);
+        if (item.value != null) {
+            holder.value.setText(String.valueOf(item.value));
+            holder.value.setVisibility(View.VISIBLE);
+        }
+        return rowView;
     }
 }

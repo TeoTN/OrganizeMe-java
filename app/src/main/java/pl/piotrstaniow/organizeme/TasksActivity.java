@@ -17,23 +17,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import pl.piotrstaniow.organizeme.DatabaseUtils.LocalDbHelper;
-import pl.piotrstaniow.organizeme.DatabaseUtils.LocalQueryManager;
-import pl.piotrstaniow.organizeme.NavigationDrawer.DrawerItemClickListener;
+import pl.piotrstaniow.organizeme.NavigationDrawer.NavigationDrawerBuilder;
 
 
 public class TasksActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
-    private String[] drawerOptions;
     private DrawerLayout drawerLayout;
-    private ListView drawerList;
     private FrameLayout contentFrame;
-    private TextView drawerInfo;
-    private ArrayAdapter drawerListAdapter;
     private ActionBarDrawerToggle drawerToggle;
+    private NavigationDrawerBuilder navigationDrawerBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,38 +42,21 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         LocalDbHelper.createInstance(this);
 
         preloadContent();
-
-        drawerOptions = getResources().getStringArray(R.array.drawer_options);
+        navigationDrawerBuilder = new NavigationDrawerBuilder(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerInfo = (TextView) findViewById(R.id.tv_done);
-        refreshArchivedTaskInfo();
-        drawerListAdapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions);
-
-        drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setAdapter(drawerListAdapter);
-        drawerList.setOnItemClickListener(new DrawerItemClickListener(this));
-
+        drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
                 R.string.drawer_open,
                 R.string.drawer_close);
-
-        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        drawerToggle.syncState();
     }
 
-    public void refreshArchivedTaskInfo() {
-        LocalDbHelper.createInstance(this);
-        LocalQueryManager.getInstance().openWritable();
-        CharSequence tasks_done = getResources().getText(R.string.drawer_tasks_done);
-        long done_count = LocalQueryManager.getInstance().countArchivedTasks();
-        drawerInfo.setText(done_count + " " + tasks_done);
-        LocalQueryManager.getInstance().close();
-        if (drawerListAdapter != null)
-            drawerListAdapter.notifyDataSetChanged();
+    public void refreshTasksDone() {
+        navigationDrawerBuilder.refreshTasksDone();
     }
 
     @Override
@@ -135,14 +111,6 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public String[] getDrawerOptions() {
-        return drawerOptions;
-    }
-
-    public void setDrawerItemChecked(int position, boolean b) {
-        drawerList.setItemChecked(position, b);
     }
 
     public void closeDrawer() {

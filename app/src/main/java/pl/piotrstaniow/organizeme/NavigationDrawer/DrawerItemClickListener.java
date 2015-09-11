@@ -19,7 +19,7 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
 
     public DrawerItemClickListener(TasksActivity context) {
         this.context = context;
-        drawerOptions = context.getDrawerOptions();
+        //drawerOptions = context.getDrawerOptions();
     }
 
     @Override
@@ -43,7 +43,8 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
                 .replace(R.id.content_frame, fragment)
                 .commit();
 
-        ((TasksActivity) context).setDrawerItemChecked(position, true);
+       //
+       // ((TasksActivity) context).setDrawerItemChecked(position, true);
         ((TasksActivity) context).setTitle(drawerOptions[position]);
         ((TasksActivity) context).closeDrawer();
     }
