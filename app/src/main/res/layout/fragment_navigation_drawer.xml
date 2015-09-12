@@ -18,7 +18,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/drawer_default_username"
-                android:textColor="@color/accent"
+                android:textColor="@color/black"
                 style="@style/Base.TextAppearance.AppCompat.Display2"
                 />
             <ListView
@@ -32,8 +32,16 @@
     <ListView
         android:id="@+id/options_items"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/drawer_toolbar"
+        android:background="@color/white"
+        android:choiceMode="singleChoice"
+        android:padding="16dp"/>
+    <ListView
+        android:id="@+id/additional_items"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/options_items"
         android:background="@color/white"
         android:choiceMode="singleChoice"
         android:padding="16dp"/>

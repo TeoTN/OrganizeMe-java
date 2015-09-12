@@ -26,11 +26,11 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
     private DrawerLayout drawerLayout;
     private FrameLayout contentFrame;
     private ActionBarDrawerToggle drawerToggle;
-    private NavigationDrawerBuilder navigationDrawerBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocalDbHelper.createInstance(this);
 
         Intent ishintent = new Intent(this, GPSPositionCheckingService.class);
         PendingIntent pintent = PendingIntent.getService(this, 0, ishintent, 0);
@@ -42,7 +42,8 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         LocalDbHelper.createInstance(this);
 
         preloadContent();
-        navigationDrawerBuilder = new NavigationDrawerBuilder(this);
+        NavigationDrawerBuilder.getInstance(this);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle = new ActionBarDrawerToggle(
@@ -53,10 +54,6 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         drawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-    }
-
-    public void refreshTasksDone() {
-        navigationDrawerBuilder.refreshTasksDone();
     }
 
     @Override
@@ -87,13 +84,10 @@ public class TasksActivity extends ActionBarActivity implements SearchView.OnQue
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tasks, menu);
 
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView( menu.findItem(R.id.action_search));
 
-
         searchView.setOnQueryTextListener(this);
-
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
         return super.onCreateOptionsMenu(menu);

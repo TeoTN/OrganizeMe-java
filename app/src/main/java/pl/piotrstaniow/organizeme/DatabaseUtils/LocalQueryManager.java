@@ -16,6 +16,7 @@ import pl.piotrstaniow.organizeme.R;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -124,6 +125,24 @@ public class LocalQueryManager {
 
     public long countArchivedTasks() {
         return DatabaseUtils.queryNumEntries(database, "archived_task");
+    }
+
+    public long countPendingTasks() {
+        return DatabaseUtils.queryNumEntries(database, "task");
+    }
+
+    public long countCategories() {
+        return DatabaseUtils.queryNumEntries(database, "category");
+    }
+
+    public long countTodayTasks() {
+        //TODO
+        String today = DateTimeUtils.dateToString(Calendar.getInstance().getTime(), false);
+        return DatabaseUtils.queryNumEntries(database, "task", "deadline LIKE '"+today+"%'");
+    }
+
+    public long countFutureTasks() {
+        return 0; //TODO
     }
 
     public void createLabel(String label) {

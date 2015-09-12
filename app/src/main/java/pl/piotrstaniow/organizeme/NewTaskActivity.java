@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 import pl.piotrstaniow.organizeme.Models.*;
+import pl.piotrstaniow.organizeme.NavigationDrawer.NavigationDrawerBuilder;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -257,6 +258,7 @@ public class NewTaskActivity extends ActionBarActivity
         createdTask.setTaskDesc(taskDesc);
         createdTask.setLabels(getLabelsFromView());
         TaskAggregator.getInstance().add(createdTask);
+        NavigationDrawerBuilder.getInstance(this).notifyValuesChanged();
         finish();
     }
 

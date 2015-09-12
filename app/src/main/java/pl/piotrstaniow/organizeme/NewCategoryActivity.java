@@ -13,6 +13,7 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 
 import pl.piotrstaniow.organizeme.Models.Category;
 import pl.piotrstaniow.organizeme.Models.CategoryAggregator;
+import pl.piotrstaniow.organizeme.NavigationDrawer.NavigationDrawerBuilder;
 
 
 public class NewCategoryActivity extends ActionBarActivity implements View.OnClickListener {
@@ -63,6 +64,7 @@ public class NewCategoryActivity extends ActionBarActivity implements View.OnCli
         createdCategory.setName(name);
         createdCategory.setColor(color);
         CategoryAggregator.getInstance().add(createdCategory);
+        NavigationDrawerBuilder.getInstance(this).notifyValuesChanged();
         finish();
     }
 }

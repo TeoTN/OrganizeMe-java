@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 public class NavigationDrawerItem {
     public Integer icon;
     public CharSequence text;
-    public Integer value;
+    public long value;
     private boolean hasValueState;
 
     public NavigationDrawerItem(Integer icon, CharSequence text) {

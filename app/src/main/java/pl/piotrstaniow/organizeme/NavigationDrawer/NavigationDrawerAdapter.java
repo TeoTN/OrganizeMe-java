@@ -61,7 +61,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         NavigationDrawerItem item = items.get(position);
         holder.text.setText(item.text);
         holder.icon.setImageResource(item.icon);
-        if (item.value != null) {
+        if (item.hasValue()) {
             holder.value.setText(String.valueOf(item.value));
             holder.value.setVisibility(View.VISIBLE);
         }

@@ -15,6 +15,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import pl.piotrstaniow.organizeme.Models.Task;
 import pl.piotrstaniow.organizeme.Models.TaskAggregator;
+import pl.piotrstaniow.organizeme.NavigationDrawer.NavigationDrawerBuilder;
 import pl.piotrstaniow.organizeme.TaskCollectionUtils.*;
 
 
@@ -157,13 +158,14 @@ public class TaskListFragment extends Fragment implements View.OnClickListener, 
                         } else if (which == R.id.task_delete) {
                             ta.remove(task);
                             taskListAdapter.notifyDataSetChanged();
+                            NavigationDrawerBuilder.getInstance(getActivity()).notifyValuesChanged();
 
                         } else if (which == R.id.task_notif) {
                             pickNotif(task.getID());
                         } else if (which == R.id.task_done) {
                             ta.markAsDone(task);
                             taskListAdapter.notifyDataSetChanged();
-                            ((TasksActivity) getActivity()).refreshTasksDone();
+                            NavigationDrawerBuilder.getInstance(getActivity()).notifyValuesChanged();
                         }
                     }
                 }).show();
